@@ -126,6 +126,12 @@ const updateRedeemStatus = (data = {}) => {
     return request(url, method, data);
 }
 
+const userImportExcel = (data = {}) => {
+    let url = "api/users/import_excel";
+    let method = "POST"
+    return request(url, method, data, true);
+} 
+
 const API  = {
     getUsers,
     createUser,
@@ -142,6 +148,7 @@ const API  = {
     getHistoryPoint,
     getHistoryRedeem,
     updateRedeemStatus,
+    userImportExcel
 }
 
 export default API;

@@ -12,11 +12,17 @@ class Users extends Component {
         users : [],
         user: {},
         tableIsLoading : true,
+        previewMode : false,
         showModal : false,
         addPointMode : false,
         pointData : {
             user_id : "",
             add_point : 0,
+        },
+        importExcelMode : false,
+        importExcel : {
+            excel_file : "",
+            excel_name : "",
         }
     }
     
@@ -24,12 +30,56 @@ class Users extends Component {
         this.setState({
             showModal : false,
             user : {},
+            previewMode : false,
+            importExcelMode : false,
             addPointMode : false,
             pointData : {
                 user_id : "",
                 add_point : 0,
+            },
+            importExcel : {
+                excel_file : "",
+                excel_name : "",
             }
         })
+    }
+
+    handleOpenImportExcel = () => {
+        this.setState({
+            importExcelMode : true,
+        },() => {
+            this.openModal()
+        })
+    }
+
+    importExcel = () => {
+        let excelData = {...this.state.importExcel};
+        let noValue = false;
+        for(let key in excelData){
+            if(excelData[key] == ""){
+                noValue = true;
+            }
+        }
+
+        if(noValue){
+            window.alert("No file inserted!");
+        } else {
+            let formData = new FormData();
+            formData.append('excel_name', excelData.excel_name);
+            formData.append('excel_file', excelData.excel_file);
+            API.userImportExcel(formData)
+            .then((response) => {
+                // console.log(response);
+                if(response.status){
+                    alert(response.message);
+                    this.getUser();
+                } else {
+                    console.log(response);
+                    alert(response.message);
+                    this.getUser();
+                }
+            })
+        }
     }
 
     openModal = () => {
@@ -40,6 +90,7 @@ class Users extends Component {
 
     previewUser = (user) => {
         this.setState({
+            previewMode : true,
             user : user
         }, () => {
             this.openModal();
@@ -55,7 +106,7 @@ class Users extends Component {
                     users : users
                 })
             } else {
-                if(response.code ===404){
+                if(response.code === 404){
                     this.setState({
                         users : [...this.state.users]
                     })
@@ -75,17 +126,25 @@ class Users extends Component {
 
     handleChangeInput = (input) => {
         let pointData = {...this.state.pointData}
+        let importExcel = {...this.state.importExcel}
         let name = input.target.name;
         switch(name){
             case "add_point":
                 pointData.add_point = input.target.value;
+                break;
+            case "excel_file":
+                importExcel.excel_file  = input.target.files[0];
+                importExcel.excel_name  = input.target.files[0].name;
                 break;
             default:
                 return false;
         }
 
         this.setState({
-            pointData : pointData
+            pointData : pointData,
+            importExcel : importExcel
+        }, () => {
+            console.log(this.state.importExcel);
         })
     }
 
@@ -160,20 +219,12 @@ class Users extends Component {
         }
     }
 
-    // realTimeUpdateUser = () => {
-    //     setInterval(() => {
-    //         this.getUser();
-    //     }, 1000)
-    // }
-
-
     componentDidMount(){
         document.getElementById('panel-title').innerText = "Users List";
         this.getUser();
-        // this.realTimeUpdateUser();
     }
     render(){
-        // console.log(this);
+        // console.log(typeof(this.state.user))
         return(
             <>
                 <div className="offer-section">
@@ -182,7 +233,8 @@ class Users extends Component {
                             <div className="offer-main card">
                                 
                                 <div className="offer-header pb-3">
-                                    <Link to="/user/add" className="btn btn-primary">Add User</Link>
+                                    <Link to="/user/add" className="btn btn-primary mr-2">Add User</Link>
+                                    <button onClick={this.handleOpenImportExcel} className="btn btn-primary">Upload Excel</button>
                                 </div>
 
                                 <div className="offer-body">
@@ -196,7 +248,7 @@ class Users extends Component {
                     </div>
                 </div>
                 {
-                    this.state.showModal ?
+                    this.state.showModal && this.state.previewMode ?
                     <Modal>
                         <div className="modal-header">
                             <h4 className="modal-title">Detail</h4>
@@ -255,8 +307,34 @@ class Users extends Component {
                             <button onClick= {() => this.deleteUser(this.state.user.user_id)} className="btn btn-danger">delete</button>
                         </div>
                     </Modal>
-                    : ""
+                    : 
+                    ""
                 }
+                {
+                    this.state.showModal && this.state.importExcelMode ? 
+                    <Modal size="small">
+                        <div className="modal-header">
+                            <h4 className="modal-title">Import Excel</h4>
+                            <span  onClick={this.closeModal} className="modal-close">&times;</span>
+                        </div>
+                        <div className="modal-body">
+                            <div className="import-excel-form">
+                                <div className="import-wrapper">
+                                    <input onChange={(e) => this.handleChangeInput(e)} name="excel_file" type="file" accept=".xls,.xlsx,.odx" className="import-input" />
+                                    <span>{this.state.importExcel.excel_name === "" ? "Choose File" : this.state.importExcel.excel_name}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button onClick={this.importExcel} className="btn btn-primary btn-sm mr-2">Submit</button>
+                            <button onClick={this.closeModal} className="btn btn-secondary btn-sm">Cancel</button>
+                        </div>
+                    </Modal>
+                    :
+                    ""
+                }
+                
+                
             </>
         )
     }

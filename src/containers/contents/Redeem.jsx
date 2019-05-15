@@ -83,7 +83,7 @@ class Redeem extends Component {
                                                             <td>{redeem.rh_user_name}</td>
                                                             <td style={{textAlign: "center"}}>{redeem.rh_item_name}</td>
                                                             <td style={{textAlign: "center"}}>{redeem.rh_date}</td>
-                                                            <td style={{textAlign: "center"}}>{redeem.rh_status === "1" ? "paid" : <button onClick={() => this.changeStatus(redeem.rh_id)} className="btn btn-sm btn-danger">waiting</button>}</td>
+                                                            <td style={{textAlign: "center"}}>{redeem.rh_status === "1" ? "paid" : <button onClick={() => this.changeStatus(redeem.rh_id)} className="btn btn-sm btn-danger">accept</button>}</td>
                                                         </tr>
                                                     )
                                                 })
