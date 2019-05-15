@@ -18,11 +18,11 @@ class Sidebar extends Component {
                 <div className="sidebar-body">
                     <ul className="sidebar-nav">
                         <li><NavLink exact to="/">Dashboard</NavLink></li>
-                        <li><NavLink exact to="/user">Users</NavLink></li>
-                        <li><NavLink exact to="/point-history">Point History</NavLink></li>
-                        <li><NavLink exact to="/redeem">Redeem</NavLink></li>
-                        <li><NavLink exact to="/item">Items</NavLink></li>
-                        <li><NavLink exact to="/setting">Setting</NavLink></li>
+                        <li><NavLink to="/user">Users</NavLink></li>
+                        <li><NavLink to="/point-history">Point History</NavLink></li>
+                        <li><NavLink to="/redeem">Redeem</NavLink></li>
+                        <li><NavLink to="/item">Items</NavLink></li>
+                        <li><NavLink to="/setting">Setting</NavLink></li>
                     </ul>
                 </div>
             </div>

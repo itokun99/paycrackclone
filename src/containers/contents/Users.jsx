@@ -56,7 +56,7 @@ class Users extends Component {
         let excelData = {...this.state.importExcel};
         let noValue = false;
         for(let key in excelData){
-            if(excelData[key] == ""){
+            if(excelData[key] === ""){
                 noValue = true;
             }
         }

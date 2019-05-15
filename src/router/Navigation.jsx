@@ -32,14 +32,14 @@ const Navigation = (props) => {
             {
                 props.ContextState.isLogin ? 
                     <>  
-                        <Route path =  "/" component={Dashboard} exact />
-                        <Route path =  "/point-history" component={PointHistory} exact />
-                        <Route path =  "/redeem" component={Redeem} exact />
-                        <Route path =  "/user" component={Users} exact /> 
-                        <Route path =  "/user/add" component={UserAdd} exact /> 
-                        <Route path =  "/user/edit/:id" component={UserEdit} exact /> 
-                        <Route path =  "/item" component={Items} exact />
-                        <Route path =  "/setting" component={Setting} exact />
+                        <Route path ="/" component={Dashboard} exact />
+                        <Route path ="/point-history" component={PointHistory} />
+                        <Route path ="/redeem" component={Redeem} />
+                        <Route path ="/user" component={Users} /> 
+                        <Route path ="/user/add" component={UserAdd} /> 
+                        <Route path ="/user/edit/:id" component={UserEdit} /> 
+                        <Route path ="/item" component={Items} />
+                        <Route path ="/setting" component={Setting} />
                     </>
                 :
                     <>
