@@ -49,6 +49,7 @@ class Redeem extends Component {
 
     componentDidMount(){
         document.getElementById('panel-title').innerText = "Redeem List";
+        document.title = "Redeem List"
         this.getRedeemHistory();
     }
 

@@ -4,6 +4,7 @@ import ContentWrapper from '../ContentWrapper';
 class Dashboard extends Component {
     componentDidMount(){
         document.getElementById('panel-title').innerText = "Dashboard";
+        document.title = "Dashboard";
     }
 
     render(){

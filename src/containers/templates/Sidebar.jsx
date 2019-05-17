@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import{NavLink} from 'react-router-dom';
-
+import { Setting as Config } from '../../services/Services';
 class Sidebar extends Component {
     sidebarToggle = () => {
         this.props.wrapper.sidebarToggle()
@@ -17,12 +17,12 @@ class Sidebar extends Component {
                 </div>
                 <div className="sidebar-body">
                     <ul className="sidebar-nav">
-                        <li><NavLink exact to="/">Dashboard</NavLink></li>
-                        <li><NavLink to="/user">Users</NavLink></li>
-                        <li><NavLink to="/point-history">Point History</NavLink></li>
-                        <li><NavLink to="/redeem">Redeem</NavLink></li>
-                        <li><NavLink to="/item">Items</NavLink></li>
-                        <li><NavLink to="/setting">Setting</NavLink></li>
+                        <li><NavLink exact to={`${Config.basePath}`}>Dashboard</NavLink></li>
+                        <li><NavLink to={`${Config.basePath}user`}>Users</NavLink></li>
+                        <li><NavLink to={`${Config.basePath}point-history`}>Point History</NavLink></li>
+                        <li><NavLink to={`${Config.basePath}redeem`}>Redeem</NavLink></li>
+                        <li><NavLink to={`${Config.basePath}item`}>Items</NavLink></li>
+                        <li><NavLink to={`${Config.basePath}setting`}>Setting</NavLink></li>
                     </ul>
                 </div>
             </div>

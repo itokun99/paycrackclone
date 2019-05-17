@@ -3,12 +3,15 @@ import { ContextConsumer } from '../../context/Context';
 import  { Icon } from 'react-icons-kit';
 import {ic_person} from 'react-icons-kit/md/ic_person';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
+import { Setting as Config } from '../../services/Services';
 
 class Header extends Component {
     state = {
         admin : this.props.ContextState.loginData,
         dropdown : false,
     }
+
+    
 
     dropdownToggle  = () => {
         this.setState({
@@ -25,10 +28,10 @@ class Header extends Component {
         this.props.ContextAction({
             type : "ADMIN_LOGOUT",
         })
+        this.props.history.push(Config.basePath);
     }
 
     render(){
-        console.log(this)
         return(
             <header className="header-section">
                 <div className="header-container">
@@ -47,13 +50,14 @@ class Header extends Component {
                         </div>
                         <div className="header-right">
                             <div className="header-right-menu">
+                                <span style={{display: "inline-block", paddingRight : "14px", verticalAlign : "middle"}}>{this.props.ContextState.time}</span>
                                 <span onClick={this.dropdownToggle} className="header-user-icon"><Icon size={24} icon={ic_person} /></span>
                                 {
                                     this.state.dropdown ? 
                                     <div className="profile-dropdown">
                                         <ul>
                                             <li><span>{this.state.admin.admin_name}</span></li>
-                                            <li><Link to="/">About</Link></li>
+                                            <li><Link to={`${Config.basePath}`}>About</Link></li>
                                             <li><span onClick={this.logout}>Logout</span></li>
                                         </ul>
                                     </div>

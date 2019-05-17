@@ -233,6 +233,7 @@ class Items extends Component {
 
     componentDidMount(){
         document.getElementById('panel-title').innerText = "Item Lists";
+        document.title = "Manage Items";
         this.getItem();
     }
     render(){

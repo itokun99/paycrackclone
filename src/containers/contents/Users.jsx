@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import ContentWrapper from '../ContentWrapper';
 import UserTable from '../../components/UserTable';
-import API from '../../services/Services';
+import API, { Setting as Config } from '../../services/Services';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
 import Modal from '../../components/Modal';
 import { Icon } from 'react-icons-kit';
 import {plus} from 'react-icons-kit/icomoon/plus';
-
 class Users extends Component {
     state = {
         users : [],
@@ -119,7 +118,7 @@ class Users extends Component {
 
     sendEditData = (user) => {
         let user_id = user.user_id
-        this.props.history.push(`/user/edit/${user_id}`, {
+        this.props.history.push(`${Config.basePath}user/edit/${user_id}`, {
             user_data : user
         })
     }
@@ -221,6 +220,7 @@ class Users extends Component {
 
     componentDidMount(){
         document.getElementById('panel-title').innerText = "Users List";
+        document.title = "User List";
         this.getUser();
     }
     render(){
@@ -233,7 +233,7 @@ class Users extends Component {
                             <div className="offer-main card">
                                 
                                 <div className="offer-header pb-3">
-                                    <Link to="/user/add" className="btn btn-primary mr-2">Add User</Link>
+                                    <Link to={`${Config.basePath}user/add`} className="btn btn-primary mr-2">Add User</Link>
                                     <button onClick={this.handleOpenImportExcel} className="btn btn-primary">Upload Excel</button>
                                 </div>
 
