@@ -77,6 +77,10 @@ class Login extends Component {
         }
     }
 
+    componentDidMount(){
+        document.title = "Login - Administrator"
+    }
+
     render(){
         // console.log(this.props);
         return(

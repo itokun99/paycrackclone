@@ -2,7 +2,7 @@ export const Setting = {
     isOnline : false,
     onlinePath : 'http://kes.co.id/dev/paycrack/',
     offlinePath : 'http://192.168.100.5/paycrack/',
-
+    basePath : '/paycrack/'
 }
 
 const request = (url, method, data, formData = false) => {

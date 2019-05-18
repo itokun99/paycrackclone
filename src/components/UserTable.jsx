@@ -39,7 +39,7 @@ const UserTable = (props) => {
                     })
                 :
                     <tr>
-                        <td colSpan={5} style={{textAlign:'center'}}>Tidak ada data</td>
+                        <td colSpan={6} style={{textAlign:'center'}}>Tidak ada data</td>
                     </tr>
                 }
             </tbody>

@@ -10,7 +10,8 @@ const ContextProvider = (ChildrenComponent) => {
             state = {
                 siteTitle : "PayCrack",
                 isLogin : false,
-                loginData : {}
+                loginData : {},
+                time : ""
             }
 
             handleCheckLogin = () => {
@@ -23,6 +24,14 @@ const ContextProvider = (ChildrenComponent) => {
                         })
                     }
                 }
+            }
+            handleTime = () => {
+                setInterval(() => {
+                    let newTime = new Date().toLocaleTimeString();
+                    this.setState({
+                        time : newTime
+                    })
+                }, 1000)
             }
 
             dispatch = (action) => {
@@ -49,9 +58,11 @@ const ContextProvider = (ChildrenComponent) => {
 
             componentDidMount(){
                 this.handleCheckLogin();
+                this.handleTime();
             }
 
             render(){
+                
                 let ContextData = {
                     ContextState : this.state,
                     ContextAction : this.dispatch
@@ -70,6 +81,7 @@ export const ContextConsumer = (ChildrenComponent) => {
     return(
         class ParentComponent extends Component {
             render(){
+                
                 return(
                     <Consumer>
                         {

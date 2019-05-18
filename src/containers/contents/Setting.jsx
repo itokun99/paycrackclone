@@ -4,6 +4,7 @@ import ContentWrapper from '../ContentWrapper';
 class Setting extends Component {
     componentDidMount(){
         document.getElementById('panel-title').innerText = "Setting";
+        document.title = "Setting"
     }
     render(){
         return(

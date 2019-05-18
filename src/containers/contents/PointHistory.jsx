@@ -37,6 +37,7 @@ class PointHistory extends Component {
 
     componentDidMount(){
         document.getElementById('panel-title').innerText = "History Point";
+        document.title = "Point History";
         this.getHistoryPoint();
         // this.realTimeUpdate();
     }
