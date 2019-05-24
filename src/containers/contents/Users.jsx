@@ -270,10 +270,10 @@ class Users extends Component {
                                             <td>Referral Code</td>
                                             <td>{this.state.user.user_referral_code}</td>
                                         </tr>
-                                        <tr>
+                                        {/* <tr>
                                             <td>Email</td>
                                             <td>{this.state.user.user_email}</td>
-                                        </tr>
+                                        </tr> */}
                                         <tr>
                                             <td>Point</td>
                                             <td>{this.state.user.user_point} <button onClick={this.handlePlusPointButton} style={{float: "right"}} className="btn btn-primary btn-sm"><Icon size={12} icon={plus}></Icon></button></td>

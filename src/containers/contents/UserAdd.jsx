@@ -8,7 +8,6 @@ class UserAdd extends Component {
             // user_referral_code: "",
             user_name: "",
             user_fullname: "",
-            user_email: "",
             user_password: "",
             user_point: 0,
             user_verify_password : "",
@@ -27,9 +26,6 @@ class UserAdd extends Component {
             case "user_name":
                 user.user_name = input.target.value;
                 break;
-            case "user_email":
-                user.user_email = input.target.value;
-                break;
             case "user_password":
                 user.user_password = input.target.value;
                 break;
@@ -45,7 +41,7 @@ class UserAdd extends Component {
         if(user.user_password !== user.user_verify_password){
             verifyPassword = false;
         }
-
+        
         this.setState({
             user : user,
             matchPassword : verifyPassword
@@ -104,12 +100,7 @@ class UserAdd extends Component {
                                             <input onChange={(e) => this.handleChangeText(e)} name="user_name" className="form-control" type="text" placeholder="username" defaultValue={this.state.user.user_name} />
                                         </div>
                                     </div>
-                                    <div className="form-group row">
-                                        <label className="col-12 col-sm-12 col-md-3 col-lg-3 col-form-label">Email</label>
-                                        <div className="col-12 col-sm-12 col-md-9 col-lg-9">
-                                            <input onChange={(e) => this.handleChangeText(e)} name="user_email" className="form-control" type="email" placeholder="example@mail.com" defaultValue={this.state.user.user_email} />
-                                        </div>
-                                    </div>
+
                                     <div className="form-group row">
                                         <label className="col-12 col-sm-12 col-md-3 col-lg-3 col-form-label">Password</label>
                                         <div className="col-12 col-sm-12 col-md-9 col-lg-9">

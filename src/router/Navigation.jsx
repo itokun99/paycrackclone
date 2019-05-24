@@ -11,6 +11,9 @@ import UserAdd from '../containers/contents/UserAdd';
 import UserEdit from '../containers/contents/UserEdit';
 import Redeem from '../containers/contents/Redeem';
 import { Setting as Config} from '../services/Services';
+import SpinnnerSetting from '../containers/contents/SpinnnerSetting';
+import SpinnerProbs from '../containers/contents/SpinnerProbs';
+import SpinnerAdd from '../containers/contents/SpinnerAdd';
 
 const RouterWrapper = (Navigation) => {
     return(
@@ -38,6 +41,9 @@ const Navigation = (props) => {
                         <Route path ={`${Config.basePath}user/add`} exact component={UserAdd} /> 
                         <Route path ={`${Config.basePath}user/edit/:id`} exact component={UserEdit} /> 
                         <Route path ={`${Config.basePath}item`} exact component={Items} />
+                        <Route path ={`${Config.basePath}spinner`} exact component={SpinnerProbs} />
+                        <Route path ={`${Config.basePath}spinner/add`} exact component={SpinnerAdd} />
+                        <Route path ={`${Config.basePath}spinner/setting`} exact component={SpinnnerSetting} />
                         <Route path ={`${Config.basePath}setting`} exact component={SettingPage} />
                     </>
                 :

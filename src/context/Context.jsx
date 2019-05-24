@@ -11,7 +11,7 @@ const ContextProvider = (ChildrenComponent) => {
                 siteTitle : "PayCrack",
                 isLogin : false,
                 loginData : {},
-                time : ""
+                // time : ""
             }
 
             handleCheckLogin = () => {
@@ -25,14 +25,14 @@ const ContextProvider = (ChildrenComponent) => {
                     }
                 }
             }
-            handleTime = () => {
-                setInterval(() => {
-                    let newTime = new Date().toLocaleTimeString();
-                    this.setState({
-                        time : newTime
-                    })
-                }, 1000)
-            }
+            // handleTime = () => {
+            //     setInterval(() => {
+            //         let newTime = new Date().toLocaleTimeString();
+            //         this.setState({
+            //             time : newTime
+            //         })
+            //     }, 1000)
+            // }
 
             dispatch = (action) => {
                 let loginData = {...this.state.loginData};
@@ -58,7 +58,7 @@ const ContextProvider = (ChildrenComponent) => {
 
             componentDidMount(){
                 this.handleCheckLogin();
-                this.handleTime();
+                // this.handleTime();
             }
 
             render(){

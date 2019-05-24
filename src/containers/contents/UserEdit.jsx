@@ -8,7 +8,6 @@ class UserEdit extends Component {
             user_id : "",
             user_name: "",
             user_fullname: "",
-            user_email: "",
             user_old_password : "",
             user_password : "",
             user_verify_password : ""
@@ -27,9 +26,6 @@ class UserEdit extends Component {
                 break;
             case "user_name":
                 user.user_name = input.target.value;
-                break;
-            case "user_email":
-                user.user_email = input.target.value;
                 break;
             case "user_old_password":
                 user.user_old_password = input.target.value;
@@ -112,8 +108,7 @@ class UserEdit extends Component {
                     data = response.data[0];
                     user.user_id = data.user_id; 
                     user.user_name = data.user_name; 
-                    user.user_fullname = data.user_fullname; 
-                    user.user_email = data.user_email; 
+                    user.user_fullname = data.user_fullname;
                     this.setState({
                         user : user
                     }, () => {
@@ -129,7 +124,6 @@ class UserEdit extends Component {
             user.user_id = data.user_id; 
             user.user_name = data.user_name; 
             user.user_fullname = data.user_fullname; 
-            user.user_email = data.user_email;
             this.setState({
                 user : user
             }, () => {
@@ -166,12 +160,6 @@ class UserEdit extends Component {
                                         <label className="col-12 col-sm-12 col-md-3 col-lg-3 col-form-label">Username</label>
                                         <div className="col-12 col-sm-12 col-md-9 col-lg-9">
                                             <input onChange={(e) => this.handleChangeText(e)} name="user_name" className="form-control" type="text" placeholder="username" defaultValue={this.state.user.user_name} />
-                                        </div>
-                                    </div>
-                                    <div className="form-group row">
-                                        <label className="col-12 col-sm-12 col-md-3 col-lg-3 col-form-label">Email</label>
-                                        <div className="col-12 col-sm-12 col-md-9 col-lg-9">
-                                            <input onChange={(e) => this.handleChangeText(e)} name="user_email" className="form-control" type="email" placeholder="example@mail.com" defaultValue={this.state.user.user_email} />
                                         </div>
                                     </div>
                                     {

@@ -417,6 +417,8 @@ textarea.form-control.is-invalid {
   transition: .2s;
   outline:none;
   text-decoration: none;
+  line-height: 1.2;
+  vertical-align: middle;
 }
 .btn-sm {
   padding : 4px 8px;
@@ -647,7 +649,9 @@ textarea.form-control.is-invalid {
   font-size: 12px;
 }
 
-
+.react-datepicker__input-container {
+  width:  100%
+}
 
 
 @media(max-width:768px){

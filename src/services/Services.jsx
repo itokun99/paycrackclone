@@ -130,7 +130,26 @@ const userImportExcel = (data = {}) => {
     let url = "api/users/import_excel";
     let method = "POST"
     return request(url, method, data, true);
-} 
+}
+
+const getSpinnerProbsData  = (data = {}) => {
+    let params = 0;
+    for(let key in data){
+        params++
+    }
+    let admin = `${typeof(data.admin) !== "undefined" ? params > 1 ? "&admin="+data.admin : "admin="+data.admin : ""}`;
+    let id = `${typeof(data.id) !== "undefined" ? params > 1 ? "&id="+data.id : "id="+data.id : ""}`;
+    let path = `api/spinner/probs${params > 0 ? '?' : ""}${admin}${id}`;
+
+    return request(path);
+}
+
+const addSpinnerProbsData = (data = {}) => {
+    let path = "api/spinner/probs";
+    let method = "POST";
+
+    return request(path, method, data);
+}
 
 const API  = {
     getUsers,
@@ -148,7 +167,9 @@ const API  = {
     getHistoryPoint,
     getHistoryRedeem,
     updateRedeemStatus,
-    userImportExcel
+    userImportExcel,
+    getSpinnerProbsData,
+    addSpinnerProbsData,
 }
 
 export default API;
