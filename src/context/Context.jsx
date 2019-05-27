@@ -17,7 +17,7 @@ const ContextProvider = (ChildrenComponent) => {
             handleCheckLogin = () => {
                 if(window.localStorage.hasOwnProperty('loginData')){
                     let loginData = JSON.parse(window.localStorage.loginData);
-                    if(loginData.hasOwnProperty('admin_email')){
+                    if(loginData.hasOwnProperty('user_name')){
                         this.setState({
                             isLogin : true,
                             loginData : loginData

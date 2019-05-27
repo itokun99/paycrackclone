@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ContentWrapper from '../ContentWrapper';
 import API, { Setting as Config } from '../../services/Services';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
+import { ContextConsumer } from '../../context/Context';
 class UserAdd extends Component {
     state = {
         user : {
@@ -49,6 +50,7 @@ class UserAdd extends Component {
     }
 
     saveUser = () => {
+        let loginData = this.props.ContextState.loginData;
         let user = {...this.state.user};
         let noValue = false;
         for(let key in user){
@@ -59,6 +61,7 @@ class UserAdd extends Component {
         if(noValue){
             alert("Please fill the form correctly!");
         } else {
+            user.appkey = loginData.appkey;
             API.createUser(user)
             .then((response) => {
                 if(response.status){
@@ -137,4 +140,5 @@ class UserAdd extends Component {
         )
     }
 }
-export default ContentWrapper(UserAdd);
+
+export default ContentWrapper(ContextConsumer(UserAdd));

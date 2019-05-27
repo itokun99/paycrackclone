@@ -6,6 +6,7 @@ import {plus} from 'react-icons-kit/icomoon/plus';
 import {ic_delete} from 'react-icons-kit/md/ic_delete';
 import {ic_mode_edit} from 'react-icons-kit/md/ic_mode_edit';
 import Modal from '../../components/Modal';
+import { ContextConsumer } from '../../context/Context';
 
 class Items extends Component {
     state = {
@@ -24,7 +25,11 @@ class Items extends Component {
     }
 
     getItem = () => {
-        API.getItems()
+        let loginData = this.props.ContextState.loginData;
+        let params = {
+            appkey : loginData.appkey
+        }
+        API.getItems(params)
         .then((response) => {
             if(response.status){
                 this.setState({
@@ -41,6 +46,7 @@ class Items extends Component {
 
     saveItem = () => {
         let itemNew = {...this.state.itemNew}
+        let loginData = this.props.ContextState.loginData;
         
         let noValue = false;
         for(let key in itemNew){
@@ -54,6 +60,7 @@ class Items extends Component {
             // send with form data //
             let formData = new FormData();
             itemNew.item_pic_source = "";
+            formData.append('appkey', loginData.appkey);
             formData.append('item_pic', itemNew.item_pic_file);
             itemNew.item_pic_file = "";
             formData.append('item_data', JSON.stringify(itemNew));
@@ -95,7 +102,7 @@ class Items extends Component {
 
     editItem = () => {
         let itemNew = {...this.state.itemNew};
-        
+        let loginData = this.props.ContextState.loginData;
         let noValue = false;
         for(let key in itemNew){
             if(itemNew[key] === ""){
@@ -112,6 +119,7 @@ class Items extends Component {
             if(itemNew.item_pic_file === ""){
                 itemNew.item_pic_file = "";
             }
+            formData.append('appkey', loginData.appkey);
             formData.append('item_pic', itemNew.item_pic_file);
             itemNew.item_pic_file = "";
             formData.append('item_data', JSON.stringify(itemNew));
@@ -145,8 +153,9 @@ class Items extends Component {
 
     deleteItem = (item_id) => {
         let conf = window.confirm("Want to delete this item?");
+        let loginData = this.props.ContextState.loginData;
         if(conf){
-            API.deleteItem(item_id)
+            API.deleteItem(loginData.appkey,item_id)
             .then((response) => {
                 if(response.status){
                     alert(response.message);
@@ -325,4 +334,5 @@ class Items extends Component {
 }
 
 
-export default ContentWrapper(Items);
+
+export default ContentWrapper(ContextConsumer(Items));

@@ -1,13 +1,14 @@
 import React,  {Component} from 'react';
 import ContentWrapper from '../ContentWrapper';
 import Modal from '../../components/Modal';
-import { Setting } from '../../services/Services';
+import API, { Setting } from '../../services/Services';
 import { Link } from 'react-router-dom';
+import { ContextConsumer } from '../../context/Context';
 class SpinnerSetting extends Component {
     constructor(props){
         super(props);
         this.state = {
-            slot : [1,2,3,4,5,6,7,8,9,10],
+            slot : [],
             spinner_data : {
                 probs : [],
                 values : [],
@@ -17,6 +18,7 @@ class SpinnerSetting extends Component {
                 password : ""
             },
             showModal : false,
+            percentCounter : 100,
         }
         this.handleChangeText2 = this.handleChangeText2.bind(this);
     }
@@ -34,8 +36,20 @@ class SpinnerSetting extends Component {
             default: 
                 return false;
         }
+
+        let counter = 0;
+        spinner_data.probs.map((value) => {
+            if(value !== ""){
+                counter += parseFloat(value);
+            } else {
+                counter += 0;
+            }
+        })
+        
+
         this.setState({
-            spinner_data : spinner_data
+            spinner_data : spinner_data,
+            percentCounter : 100 - counter
         })
     }
 
@@ -71,19 +85,83 @@ class SpinnerSetting extends Component {
     }
     
     saveSetting = () => {
+        let loginData = this.props.ContextState.loginData;
         let slot  = this.state.slot;
         let spinner_data  = {...this.state.spinner_data};
         let noValue = false;
+        let admin_data = {...this.state.admin_data};
+        let limit = this.state.percentCounter;
 
-        if(spinner_data.value.length !== slot.length || spinner_data.probs.length !== slot.length ){
-            alert("Please fill all input!");
+        if(spinner_data.values.length !== slot.length || spinner_data.probs.length !== slot.length ){
+            alert("Please fill all input field!");
         } else {
             for(var i = 0; i < slot.length; i++){
-                if(spinner_data.values[i] === "" || spinner_data.probs[i]){
+                if(spinner_data.values[i] === "" || spinner_data.probs[i] === ""){
                     noValue = true;
                 }
             }
+            if(noValue){
+                alert("Please fill all input field!");
+            } else {
+                if(limit < 0){
+                    alert("Please pass the limit into 100%");                
+                } else {
+                    noValue = false;
+                    for(let key in admin_data){
+                        if(admin_data[key] === ""){
+                            noValue = true;
+                        }
+                    }
+                    if(noValue){
+                        alert("Please insert username/password for verification");                
+                    } else {
+                        let send_data = {
+                            appkey : loginData.appkey,
+                            username : admin_data.email,
+                            password : admin_data.password,
+                            ...spinner_data,
+
+                        }
+                        // console.log(send_data);
+                        API.updateSpinnerProbsSettingData(send_data)
+                        .then((result) => {
+                            console.log(result);
+                            if(result.status){
+                                alert(result.message)
+                            } else {
+                                alert(result.message);
+                            }
+                        })
+                    }
+                }
+            }
         }
+    }
+    getProbsSetting = () => {
+        let loginData = this.props.ContextState.loginData;
+        let spinner_data = {...this.state.spinner_data};
+        let params = {
+            appkey : loginData.appkey
+        }
+        API.getSpinnerSettingData(params)
+        .then((result) => {
+            if(result.status){
+                result.data.map((value, index) => {
+                    spinner_data.probs.push(parseFloat(value.spinner_probablity));
+                    spinner_data.values.push(isNaN(value.spinner_value) ? value.spinner_value : parseFloat(value.spinner_value) );
+                })
+                this.setState({
+                    slot : result.data,
+                    spinner_data : spinner_data
+                }, () => {
+                    console.log(this.state.spinner_data)
+                })
+            }
+        })
+    }
+
+    componentDidMount(){
+        this.getProbsSetting();
     }
 
 
@@ -100,25 +178,25 @@ class SpinnerSetting extends Component {
                                         <div className="form-group row">
                                             <div className="col-12 col-sm-12 col-md-4 col-md-4"><strong>Slot</strong></div>
                                             <div className="col-12 col-sm-12 col-md-4 col-md-4"><strong>Value</strong></div>
-                                            <div className="col-12 col-sm-12 col-md-4 col-md-4"><strong>Probablity</strong><span style={{float: "right"}}><strong>100%</strong></span></div>
+                                            <div className="col-12 col-sm-12 col-md-4 col-md-4"><strong>Probablity</strong><span style={{float: "right"}}><strong>Limit {this.state.percentCounter}%</strong></span></div>
                                         </div>
                                         {
                                             this.state.slot.map((value, index) => {
                                                 return(
                                                     <div key={index} className="form-group row">
-                                                        <label className="col-12 col-sm-12 col-md-4 col-lg-4  col-form-label">{value === 1 ? "Mistery Price" : `Slot ${value}`}</label>
+                                                        <label className="col-12 col-sm-12 col-md-4 col-lg-4  col-form-label">{value.spinner_name}</label>
                                                         <div className="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <input type="text" min={0} onChange={(e) => this.handleChangeText(e, value, index )} className="form-control" name={`values`} placeholder="Value" />
-                                                        </div>button
+                                                            <input type="text" min={0} onChange={(e) => this.handleChangeText(e, index+1, index )} className="form-control" defaultValue={value.spinner_value} name={`values`} placeholder="Value" />
+                                                        </div>
                                                         <div className="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <input type="number" min={0} onChange={(e) => this.handleChangeText(e, value, index )} className="form-control" name={`probs`} placeholder="Probablity" />
+                                                            <input type="number" min={0} onChange={(e) => this.handleChangeText(e, index+1, index )} className="form-control" defaultValue={value.spinner_probablity} name={`probs`} placeholder="Probablity" />
                                                         </div>
                                                     </div>      
                                                 )
                                             })
                                         }
                                         <div className="form-group" style={{textAlign : "right"}}>
-                                            <button className="btn btn-primary">Save Setting</button>
+                                            <button onClick={this.openModal} className="btn btn-primary">Save Setting</button>
                                             <Link to={`${Setting.basePath}spinner`} className="ml-2 btn btn-secondary">Back</Link>
                                         </div>
                                     </div>
@@ -136,9 +214,9 @@ class SpinnerSetting extends Component {
                         </div>
                         <div className="modal-body">
                             <div className="form-group row">
-                                <label className="col-12 col-sm-12 col-md-3 col-lg-3 col-form-label">Email</label>
+                                <label className="col-12 col-sm-12 col-md-3 col-lg-3 col-form-label">Username</label>
                                 <div className="col-12 col-sm-12 col-md-9 col-lg-9">
-                                    <input onChange={this.handleChangeText2} className="form-control" type="email" placeholder="Email" name="email" />
+                                    <input onChange={this.handleChangeText2} className="form-control" type="email" placeholder="Username" name="email" />
                                 </div>
                             </div>
                             <div className="form-group row mb-0">
@@ -162,4 +240,5 @@ class SpinnerSetting extends Component {
         )
     }
 }
-export default ContentWrapper(SpinnerSetting);
+
+export default ContentWrapper(ContextConsumer(SpinnerSetting));

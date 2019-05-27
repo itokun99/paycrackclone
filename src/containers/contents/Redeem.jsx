@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ContentWrapper from '../ContentWrapper';
 import API from '../../services/Services';
+import { ContextConsumer } from '../../context/Context';
 
 class Redeem extends Component {
     state = {
@@ -8,7 +9,11 @@ class Redeem extends Component {
     }
 
     getRedeemHistory = () => {
-        API.getHistoryRedeem()
+        let loginData = this.props.ContextState.loginData;
+        let params = {
+            appkey : loginData.appkey
+        }
+        API.getHistoryRedeem(params)
         .then((result) => {
             if(result.status){
                 this.setState({
@@ -27,10 +32,12 @@ class Redeem extends Component {
     }
 
     changeStatus = (redeem_id) => {
+        let loginData = this.props.ContextState.loginData;
         let conf = window.confirm("Want to change this redeem status?");
         if(conf){
             let data  =  {
-                redeem_id : redeem_id
+                appkey : loginData.appkey,
+                redeem_id : redeem_id,
             };
             API.updateRedeemStatus(data)
             .then((result) => {
@@ -90,7 +97,7 @@ class Redeem extends Component {
                                                 })
                                                 :
                                                 <tr>
-                                                    <td colSpan={5}>No Redeem Data</td>
+                                                    <td style={{textAlign: "center"}} colSpan={5}>No Redeem Data</td>
                                                 </tr>
                                             }
                                         </tbody>
@@ -106,4 +113,4 @@ class Redeem extends Component {
 }
 
 
-export default ContentWrapper(Redeem);
+export default ContentWrapper(ContextConsumer(Redeem));

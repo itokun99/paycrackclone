@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom/cjs/react-router-dom';
 import Modal from '../../components/Modal';
 import { Icon } from 'react-icons-kit';
 import {plus} from 'react-icons-kit/icomoon/plus';
+import { ContextConsumer } from '../../context/Context';
 class Users extends Component {
     state = {
         users : [],
@@ -53,6 +54,7 @@ class Users extends Component {
 
     importExcel = () => {
         let excelData = {...this.state.importExcel};
+        let loginData = this.props.ContextState.loginData;
         let noValue = false;
         for(let key in excelData){
             if(excelData[key] === ""){
@@ -64,6 +66,7 @@ class Users extends Component {
             window.alert("No file inserted!");
         } else {
             let formData = new FormData();
+            formData.append('appkey', loginData.appkey);
             formData.append('excel_name', excelData.excel_name);
             formData.append('excel_file', excelData.excel_file);
             API.userImportExcel(formData)
@@ -97,7 +100,11 @@ class Users extends Component {
     } 
 
     getUser = () => {
-        API.getUsers()
+        let loginData = this.props.ContextState.loginData;
+        let params = {
+            appkey : loginData.appkey
+        }
+        API.getUsers(params)
         .then((response) => {
             if(response.status){
                 let users =  response.data;
@@ -150,7 +157,9 @@ class Users extends Component {
     deleteUser = (user_id) => {
         let conf = window.confirm("Are you sure want to delete this user?");
         if(conf){
-            API.deleteUser(user_id).then((response) => {
+            let loginData = this.props.ContextState.loginData;
+            let appkey = loginData.appkey
+            API.deleteUser(appkey, user_id).then((response) => {
                 if(response.status){
                     alert(response.message);
                     this.getUser();
@@ -186,11 +195,14 @@ class Users extends Component {
         if(noValue){
             alert("Point harus diisi");
         } else {
+            let loginData = this.props.ContextState.loginData;
+            pointData.appkey = loginData.appkey;
             API.addPoint(pointData)
             .then((response) => {
                 if(response.status){
                     alert(response.message);
                     API.getUsers({
+                        appkey : loginData.appkey,
                         id : pointData.user_id
                     }).then((response) => {
                         if(response.message){
@@ -267,14 +279,6 @@ class Users extends Component {
                                             <td>{this.state.user.user_name}</td>
                                         </tr>
                                         <tr>
-                                            <td>Referral Code</td>
-                                            <td>{this.state.user.user_referral_code}</td>
-                                        </tr>
-                                        {/* <tr>
-                                            <td>Email</td>
-                                            <td>{this.state.user.user_email}</td>
-                                        </tr> */}
-                                        <tr>
                                             <td>Point</td>
                                             <td>{this.state.user.user_point} <button onClick={this.handlePlusPointButton} style={{float: "right"}} className="btn btn-primary btn-sm"><Icon size={12} icon={plus}></Icon></button></td>
                                         </tr>
@@ -341,4 +345,4 @@ class Users extends Component {
 }
 
 
-export default ContentWrapper(Users);
+export default ContentWrapper(ContextConsumer(Users));

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ContentWrapper from '../ContentWrapper';
 import API, { Setting as Config } from '../../services/Services';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
+import { ContextConsumer } from '../../context/Context';
 class UserEdit extends Component {
     state = {
         user : {
@@ -52,6 +53,7 @@ class UserEdit extends Component {
 
     saveChangeUser = () => {
         let user = {...this.state.user}
+        let loginData = this.props.ContextState.loginData;
         let noValue = false;
         if(this.state.changePassword){
             for(let key in user){
@@ -70,6 +72,7 @@ class UserEdit extends Component {
         if(noValue){
             alert("Please fill the form correctly!");
         } else {
+            user.appkey = loginData.appkey;
             API.updateUser(user)
             .then((response) => {
                 if(response.status){
@@ -97,11 +100,13 @@ class UserEdit extends Component {
     }
 
     getData = () => {
+        let loginData = this.props.ContextState.loginData;
         let user = {...this.state.user};
         let user_id = this.props.match.params.id;
         let data = {};
         if(typeof(this.props.history.location.state) === "undefined"){
             API.getUsers({
+                appkey : loginData.appkey,
                 id : user_id
             }).then((response) => {
                 if(response.status){
@@ -216,4 +221,6 @@ class UserEdit extends Component {
         )
     }
 }
-export default ContentWrapper(UserEdit);
+
+
+export default ContentWrapper(ContextConsumer(UserEdit));

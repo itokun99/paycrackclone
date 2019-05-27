@@ -3,6 +3,7 @@ import ContentWrapper from '../ContentWrapper';
 import { ContextConsumer } from '../../context/Context';
 import API, { Setting } from '../../services/Services';
 import {Link} from 'react-router-dom';
+import moment from 'moment';
 class SpinnerProbs extends Component {
 
     state = {
@@ -10,9 +11,9 @@ class SpinnerProbs extends Component {
     }
 
     getProbData = () => {
-        let admin = this.props.ContextState.loginData.admin_email
+        let loginData = this.props.ContextState.loginData
         let params = {
-            admin : admin
+            appkey : loginData.appkey
         };
         API.getSpinnerProbsData(params)
         .then((result) => {
@@ -28,7 +29,6 @@ class SpinnerProbs extends Component {
                 }
             }
         })
-        
     }
 
     componentDidMount(){
@@ -47,7 +47,7 @@ class SpinnerProbs extends Component {
                                 <Link to={`${Setting.basePath}spinner/add`} className="btn btn-primary mr-2">Add Probablity</Link>
                                 <button className="btn btn-primary">Filter</button>
                                 <Link to={`${Setting.basePath}spinner/setting`} style={{float : "right"}} className="btn btn-primary">Setting</Link>
-                            </div>button
+                            </div>
                             <div className="spinner-body">
                                 <div className="table-responsive">
                                     <table className="table table-bordered table-hover font-sm">
@@ -67,8 +67,8 @@ class SpinnerProbs extends Component {
                                                     return(
                                                         <tr key={index}>
                                                             <td style={{width : 50, textAlign: "center"}}>{index+1}</td>
-                                                            <td style={{width : 150, textAlign: "center"}}>{value.probs_start_date}</td>
-                                                            <td style={{width : 150, textAlign: "center"}}>{value.probs_end_date}</td>
+                                                            <td style={{width : 150, textAlign: "center"}}>{moment(value.probs_start_date).format('DD MMMM YYYY')}</td>
+                                                            <td style={{width : 150, textAlign: "center"}}>{moment(value.probs_end_date).format('DD MMMM YYYY')}</td>
                                                             <td>{value.probs_data}</td>
                                                             <td style={{width : 150, textAlign: "center"}}>{value.probs_status === "1" ? "Active" : "Expired" }</td>
                                                         </tr>

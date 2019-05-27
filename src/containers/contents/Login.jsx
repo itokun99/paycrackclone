@@ -6,8 +6,8 @@ import { ContextConsumer } from '../../context/Context';
 class Login extends Component {
     state = {
         loginData : {
-            admin_email : "",
-            admin_password : "" 
+            user_name : "",
+            user_password : "" 
         },
         alertStatus : false,
         alertData : {
@@ -22,10 +22,10 @@ class Login extends Component {
 
         switch(name){
             case "email":
-                loginData.admin_email = input.target.value;
+                loginData.user_name = input.target.value;
                 break;
             case "password":
-                loginData.admin_password = input.target.value;
+                loginData.user_password = input.target.value;
                 break;
             default:
                 return false;

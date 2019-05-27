@@ -40,11 +40,14 @@ const request = (url, method, data, formData = false) => {
 }
 
 const getUsers = (data = {}) => {
-    let params = [];
+    let params = 0;
     for(let key in data){
-        params.push(key);
+        params++;
     }
-    let url = `api/users${params.length > 0 ? "?" : ""}${typeof(data.id) !== "undefined" ? params.length > 1 ? "&id="+data.id : "id="+data.id : ""}${typeof(data.limit) !== "undefined" ? params.length > 1 ? "&limit="+data.limit : "?limit="+data.limit : ""}`;
+    let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
+    let id = `${typeof(data.id) !== "undefined" ? params > 1 ? "&id="+data.id : "id="+data.id : ""}`;
+    let limit = `${typeof(data.limit) !== "undefined" ? params > 1 ? "&limit="+data.limit : "limit="+data.limit : ""}`;
+    let url = `api/users${params > 0 ? "?" : ""}${appkey}${id}${limit}`;
     return request(url);
 }
 
@@ -60,8 +63,8 @@ const updateUser = (data = {}) => {
     return request(url, method, data);
 }
 
-const deleteUser = (user_id) => {
-    let url = `api/users?user_id=${user_id}`;
+const deleteUser = (appkey, user_id) => {
+    let url = `api/users?appkey=${appkey}&user_id=${user_id}`;
     let method = "DELETE";
     return request(url, method);
 }
@@ -72,8 +75,8 @@ const loginAdmin = (data = {}) => {
     return request(url, method, data); 
 }
 
-const deleteAdmin = (admin_id) => {
-    let url = `api/users/admin?${admin_id}`;
+const deleteAdmin = (appkey,admin_id) => {
+    let url = `api/users/admin?appkey=${appkey}&user_id=${admin_id}`;
     let method = "DELETE";
     return request(url, method);
 }
@@ -84,7 +87,12 @@ const getOffers = (offer_id) => {
 }
 
 const getItems = (data = {}) => {
-    let url = `api/items`;
+    let params = 0;
+    for(let key in data){
+        params++
+    }
+    let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
+    let url = `api/items${params > 0 ? "?" : ""}${appkey}`;
     return request(url);
 }
 
@@ -98,8 +106,8 @@ const updateItem = (data = {}) => {
     let method = "POST";
     return request(url, method, data, true);
 }
-const deleteItem = (item_id) => {
-    let url = `api/items?id=${item_id}`;
+const deleteItem = (appkey, item_id) => {
+    let url = `api/items?appkey=${appkey}&id=${item_id}`;
     let method = 'DELETE'
     return request(url, method);
 }
@@ -111,12 +119,22 @@ const addPoint = (data = {}) => {
 }
 
 const getHistoryPoint = (data = {}) => {
-    let url = `api/history/point`;
+    let params = 0;
+    for(let key in data){
+        params++;
+    }
+    let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
+    let url = `api/history/point${params > 0 ? "?" : ""}${appkey}`;
     return request(url);
 }
 
 const getHistoryRedeem = (data = {}) => {
-    let url = `api/history/redeem`;
+    let params = 0;
+    for(let key in data){
+        params++;
+    }
+    let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
+    let url = `api/history/redeem${params > 0 ? "?" : ""}${appkey}`;
     return request(url);
 }
 
@@ -137,9 +155,21 @@ const getSpinnerProbsData  = (data = {}) => {
     for(let key in data){
         params++
     }
+    let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
     let admin = `${typeof(data.admin) !== "undefined" ? params > 1 ? "&admin="+data.admin : "admin="+data.admin : ""}`;
     let id = `${typeof(data.id) !== "undefined" ? params > 1 ? "&id="+data.id : "id="+data.id : ""}`;
-    let path = `api/spinner/probs${params > 0 ? '?' : ""}${admin}${id}`;
+    let path = `api/spinner/probs${params > 0 ? '?' : ""}${appkey}${admin}${id}`;
+
+    return request(path);
+}
+
+const getSpinnerSettingData  = (data = {}) => {
+    let params = 0;
+    for(let key in data){
+        params++
+    }
+    let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
+    let path = `api/spinner/show${params > 0 ? '?' : ""}${appkey}`;
 
     return request(path);
 }
@@ -151,12 +181,27 @@ const addSpinnerProbsData = (data = {}) => {
     return request(path, method, data);
 }
 
+const updateSpinnerProbsSettingData = (data = {}) => {
+    let path = "api/spinner/setting";
+    let method = "PUT";
+    
+    return request(path, method, data);
+}
+
+const adminLogout = (data = {}) => {
+    let path = "api/users/adminlogout";
+    let method = "POST";
+
+    return request(path, method, data);
+}
+
 const API  = {
     getUsers,
     createUser,
     updateUser,
     deleteUser,
     loginAdmin,
+    adminLogout,
     deleteAdmin,
     getOffers,
     getItems,
@@ -170,6 +215,8 @@ const API  = {
     userImportExcel,
     getSpinnerProbsData,
     addSpinnerProbsData,
+    getSpinnerSettingData,
+    updateSpinnerProbsSettingData,
 }
 
 export default API;

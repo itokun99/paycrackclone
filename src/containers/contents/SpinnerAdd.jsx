@@ -45,6 +45,7 @@ class SpinnerAdd extends Component {
     handleChangeDateStart = (date) => {
         let datePicker = {...this.state.datePicker }
         datePicker.startDate = moment(date).format('YYYY-MM-DD');
+        datePicker.endDate = moment(date).format('YYYY-MM-DD');
         this.setState({
             datePicker : datePicker
         }, () => {
@@ -107,6 +108,7 @@ class SpinnerAdd extends Component {
     }
     
     saveSetting = () => {
+        let loginData = this.props.ContextState.loginData;
         let slot  = this.state.slot;
         let spinner_data  = {...this.state.spinner_data};
         let admin_data = {...this.state.admin_data};
@@ -141,7 +143,8 @@ class SpinnerAdd extends Component {
                     } else {
                         var probs_data = spinner_data.probs.toString();
                         let send_data = {
-                            email : admin_data.email,
+                            appkey : loginData.appkey,
+                            username : admin_data.email,
                             password : admin_data.password,
                             probs_data : probs_data,
                             probs_start_date : datePicker.startDate,
@@ -184,9 +187,9 @@ class SpinnerAdd extends Component {
     }
 
     getProbsData = () => {
-        let admin_email = this.props.ContextState.loginData.admin_email;
+        let loginData = this.props.ContextState.loginData;
         let params = {
-            admin : admin_email
+            appkey : loginData.appkey
         }
         API.getSpinnerProbsData(params)
         .then((result) => {
@@ -298,9 +301,9 @@ class SpinnerAdd extends Component {
                         </div>
                         <div className="modal-body">
                             <div className="form-group row">
-                                <label className="col-12 col-sm-12 col-md-3 col-lg-3 col-form-label">Email</label>
+                                <label className="col-12 col-sm-12 col-md-3 col-lg-3 col-form-label">Username</label>
                                 <div className="col-12 col-sm-12 col-md-9 col-lg-9">
-                                    <input onChange={this.handleChangeText2} className="form-control" type="email" placeholder="Email" name="email" />
+                                    <input onChange={this.handleChangeText2} className="form-control" type="text" placeholder="Username" name="email" />
                                 </div>
                             </div>
                             <div className="form-group row mb-0">

@@ -3,7 +3,7 @@ import { ContextConsumer } from '../../context/Context';
 import  { Icon } from 'react-icons-kit';
 import {ic_person} from 'react-icons-kit/md/ic_person';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
-import { Setting as Config } from '../../services/Services';
+import API, { Setting as Config } from '../../services/Services';
 
 class Header extends Component {
     state = {
@@ -24,11 +24,22 @@ class Header extends Component {
     }
 
     logout = () => {
-        localStorage.clear();
-        this.props.ContextAction({
-            type : "ADMIN_LOGOUT",
+        let loginData = this.props.ContextState.loginData;
+        let params = {
+            appkey : loginData.appkey
+        }
+        API.adminLogout(params)
+        .then((result) => {
+            if(result.status){
+                this.props.ContextAction({
+                    type : "ADMIN_LOGOUT",
+                })
+                this.props.history.push(Config.basePath);
+            } else {
+                console.log(result);
+                alert(result.message);
+            }
         })
-        this.props.history.push(Config.basePath);
     }
 
     render(){
@@ -56,7 +67,7 @@ class Header extends Component {
                                     this.state.dropdown ? 
                                     <div className="profile-dropdown">
                                         <ul>
-                                            <li><span>{this.state.admin.admin_name}</span></li>
+                                            <li><span>{this.state.admin.user_fullname}</span></li>
                                             <li><Link to={`${Config.basePath}`}>About</Link></li>
                                             <li><span onClick={this.logout}>Logout</span></li>
                                         </ul>

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ContentWrapper from '../ContentWrapper';
 import API from '../../services/Services';
+import { ContextConsumer } from '../../context/Context';
 
 class PointHistory extends Component {
     state = {
@@ -10,7 +11,11 @@ class PointHistory extends Component {
 
 
     getHistoryPoint = () => {
-        API.getHistoryPoint()
+        let loginData = this.props.ContextState.loginData;
+        let params = {
+            appkey : loginData.appkey
+        }
+        API.getHistoryPoint(params)
         .then((result) => {
             if(result.status){
                 let data = result.data;
@@ -96,4 +101,4 @@ class PointHistory extends Component {
 }
 
 
-export default ContentWrapper(PointHistory);
+export default ContentWrapper(ContextConsumer(PointHistory));
