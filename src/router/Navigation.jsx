@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import ContextProvider, { ContextConsumer } from '../context/Context';
 import Dashboard from '../containers/contents/Dashboard';
 import Login from '../containers/contents/Login';
@@ -14,6 +14,7 @@ import { Setting as Config} from '../services/Services';
 import SpinnnerSetting from '../containers/contents/SpinnnerSetting';
 import SpinnerProbs from '../containers/contents/SpinnerProbs';
 import SpinnerAdd from '../containers/contents/SpinnerAdd';
+import DailyCheckSetting from '../containers/contents/DailyCheckSetting';
 
 const RouterWrapper = (Navigation) => {
     return(
@@ -44,6 +45,7 @@ const Navigation = (props) => {
                         <Route path ={`${Config.basePath}spinner`} exact component={SpinnerProbs} />
                         <Route path ={`${Config.basePath}spinner/add`} exact component={SpinnerAdd} />
                         <Route path ={`${Config.basePath}spinner/setting`} exact component={SpinnnerSetting} />
+                        <Route path ={`${Config.basePath}dailypointset`} exact component={DailyCheckSetting} />
                         <Route path ={`${Config.basePath}setting`} exact component={SettingPage} />
                     </>
                 :

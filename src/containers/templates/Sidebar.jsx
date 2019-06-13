@@ -23,6 +23,7 @@ class Sidebar extends Component {
                         <li><NavLink to={`${Config.basePath}redeem`}>Redeem</NavLink></li>
                         <li><NavLink to={`${Config.basePath}item`}>Items</NavLink></li>
                         <li><NavLink to={`${Config.basePath}spinner`}>Spinner</NavLink></li>
+                        <li><NavLink to={`${Config.basePath}dailypointset`}>Daily Set</NavLink></li>
                         {/* <li><NavLink to={`${Config.basePath}setting`}>Setting</NavLink></li> */}
                     </ul>
                 </div>

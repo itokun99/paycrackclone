@@ -31,6 +31,29 @@ class SpinnerProbs extends Component {
         })
     }
 
+    changeStatus = (probs_id, probs_status) => {
+        let loginData = this.props.ContextState.loginData;
+        let params = {
+            appkey : loginData.appkey,
+            probs_id : probs_id,
+            probs_status : probs_status
+        }
+        let conf = window.confirm('Change status?');
+        if(conf){
+            API.changeProbsStatus(params)
+            .then((result) => {
+                if(result.status){
+                    this.getProbData();
+                } else {
+                    console.log(result);
+                    alert(result.message);
+                }
+            })
+        } else {
+            return false;
+        }
+    }
+
     componentDidMount(){
         document.getElementById('panel-title').innerText = "Spinner Probablity"
         document.title = "Spinner Probablity";
@@ -45,7 +68,6 @@ class SpinnerProbs extends Component {
                         <div className="card">
                             <div className="spinner-top mb-3">
                                 <Link to={`${Setting.basePath}spinner/add`} className="btn btn-primary mr-2">Add Probablity</Link>
-                                <button className="btn btn-primary">Filter</button>
                                 <Link to={`${Setting.basePath}spinner/setting`} style={{float : "right"}} className="btn btn-primary">Setting</Link>
                             </div>
                             <div className="spinner-body">
@@ -70,7 +92,7 @@ class SpinnerProbs extends Component {
                                                             <td style={{width : 150, textAlign: "center"}}>{moment(value.probs_start_date).format('DD MMMM YYYY')}</td>
                                                             <td style={{width : 150, textAlign: "center"}}>{moment(value.probs_end_date).format('DD MMMM YYYY')}</td>
                                                             <td>{value.probs_data}</td>
-                                                            <td style={{width : 150, textAlign: "center"}}>{value.probs_status === "1" ? "Active" : "Expired" }</td>
+                                                            <td style={{width : 150, textAlign: "center"}}>{value.probs_status === "1" ? <button onClick={() => this.changeStatus(value.probs_id, 0)} className="btn btn-success btn-sm">Active</button> : <button onClick={() => this.changeStatus(value.probs_id, 1)} className="btn btn-danger btn-sm">Expired</button> }</td>
                                                         </tr>
                                                     )
                                                 })

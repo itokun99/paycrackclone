@@ -1,20 +1,37 @@
 import React, {Component} from 'react';
 import ContentWrapper from '../ContentWrapper';
 import UserTable from '../../components/UserTable';
+// import ReactTable from 'react-table';
+import 'react-table/react-table.css'
 import API, { Setting as Config } from '../../services/Services';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
 import Modal from '../../components/Modal';
 import { Icon } from 'react-icons-kit';
 import {plus} from 'react-icons-kit/icomoon/plus';
 import { ContextConsumer } from '../../context/Context';
+import UserDataTable from '../../components/UserDataTable';
+
+let interval = null;
+
 class Users extends Component {
     state = {
         users : [],
+        activeRecord : [],
+        countRecord : 0,
+        indexRecord : 0,
+        totalRecord : 50,
+        limitRecord : 50,
+        nextRecord : true,
+        loadData : true,
+        tableIndex : 0,
         user: {},
+        noLoadData : false,
         tableIsLoading : true,
         previewMode : false,
         showModal : false,
         addPointMode : false,
+        searchMode : false,
+        usersBySearch : [],
         pointData : {
             user_id : "",
             add_point : 0,
@@ -23,7 +40,8 @@ class Users extends Component {
         importExcel : {
             excel_file : "",
             excel_name : "",
-        }
+        },
+        excel_loading : false,
     }
     
     closeModal = () => {
@@ -65,21 +83,40 @@ class Users extends Component {
         if(noValue){
             window.alert("No file inserted!");
         } else {
-            let formData = new FormData();
-            formData.append('appkey', loginData.appkey);
-            formData.append('excel_name', excelData.excel_name);
-            formData.append('excel_file', excelData.excel_file);
-            API.userImportExcel(formData)
-            .then((response) => {
-                // console.log(response);
-                if(response.status){
-                    alert(response.message);
-                    this.getUser();
-                } else {
-                    console.log(response);
-                    alert(response.message);
-                    this.getUser();
-                }
+            this.setState({
+                excel_loading : true,
+            }, () => {
+                let formData = new FormData();
+                formData.append('appkey', loginData.appkey);
+                formData.append('excel_name', excelData.excel_name);
+                formData.append('excel_file', excelData.excel_file);
+                API.userImportExcel(formData)
+                .then((response) => {
+                    if(response.status){
+                        alert(response.message);
+                        this.setState({
+                            excel_loading : false,
+                        }, () => {
+                            let limit = this.state.users.length;
+                            this.setState({
+                                users : [],
+                                limitRecord : limit < 100 ? limit : 100,
+                                activeRecord : [],
+                                countRecord : 0,
+                                indexRecord : 0,
+                                totalRecord : 10,
+                            }, () => {
+                                this.getUser()    
+                            })
+                            this.getUser();
+                            this.closeModal();  
+                        })
+                    } else {
+                        console.log(response);
+                        alert(response.message);
+                        this.getUser();
+                    }
+                })
             })
         }
     }
@@ -91,38 +128,48 @@ class Users extends Component {
     }
 
     previewUser = (user) => {
+        console.log('dwadw');
         this.setState({
             previewMode : true,
             user : user
         }, () => {
             this.openModal();
         })
-    } 
-
-    getUser = () => {
+    }
+    getUser = (offset = this.state.users.length, limit = this.state.limitRecord, action = null) => {
         let loginData = this.props.ContextState.loginData;
+        let users_data = [...this.state.users]
         let params = {
-            appkey : loginData.appkey
+            appkey : loginData.appkey,
+            limit : limit,
+            offset : offset
         }
         API.getUsers(params)
         .then((response) => {
             if(response.status){
                 let users =  response.data;
-                this.setState({
-                    users : users
-                })
+                if(this.mounted){
+                    this.setState({
+                        users : [...users_data,...users],
+                        loadData : true
+                    }, action)
+                }
             } else {
                 if(response.code === 404){
-                    this.setState({
-                        users : [...this.state.users]
-                    })
+                    if(this.mounted){
+                        this.setState({
+                            users : [...this.state.users],
+                            loadData : false,
+                            noLoadData : true,
+                        }, action)
+                    }
                 } else {
                     console.log(response)
                 }
             }
         })
     }
-
+    
     sendEditData = (user) => {
         let user_id = user.user_id
         this.props.history.push(`${Config.basePath}user/edit/${user_id}`, {
@@ -139,8 +186,8 @@ class Users extends Component {
                 pointData.add_point = input.target.value;
                 break;
             case "excel_file":
-                importExcel.excel_file  = input.target.files[0];
-                importExcel.excel_name  = input.target.files[0].name;
+                importExcel.excel_file = input.target.files[0];
+                importExcel.excel_name = input.target.files[0].name;
                 break;
             default:
                 return false;
@@ -215,7 +262,16 @@ class Users extends Component {
                                     add_point : 0,
                                 }
                             }, () => {
-                                this.getUser();
+                                let users = this.state.users;
+                                users.map((value, index) => {
+                                    if(value.user_id === data.user_id ){
+                                        users[index] = data 
+                                    }
+                                    return true; 
+                                })
+                                this.setState({
+                                    users : users, 
+                                })
                             })
                         } else {
                             console.log(response);
@@ -231,12 +287,28 @@ class Users extends Component {
     }
 
     componentDidMount(){
+        this.mounted = true;
         document.getElementById('panel-title').innerText = "Users List";
         document.title = "User List";
-        this.getUser();
+        
+        this.getUser(this.state.users.length, this.state.limitRecord, () => {
+            interval = setInterval(() => {
+                console.log("Load data")
+                this.getUser();
+            }, 1000);
+        })
     }
+
+    componentWillMount(){
+        this.mounted = false;
+        clearInterval(interval);
+
+    }
+
     render(){
-        // console.log(typeof(this.state.user))
+        if(this.state.noLoadData){
+            clearInterval(interval)   
+        }
         return(
             <>
                 <div className="offer-section">
@@ -244,15 +316,19 @@ class Users extends Component {
                         <div className="col-12">
                             <div className="offer-main card">
                                 
-                                <div className="offer-header pb-3">
-                                    <Link to={`${Config.basePath}user/add`} className="btn btn-primary mr-2">Add User</Link>
-                                    <button onClick={this.handleOpenImportExcel} className="btn btn-primary">Upload Excel</button>
+                                <div className="offer-header">
+                                    <div className="row justify-content-between">
+                                        <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div className="pb-2">
+                                                <Link to={`${Config.basePath}user/add`} className="btn btn-primary mr-2">Add User</Link>
+                                                <button onClick={this.handleOpenImportExcel} className="btn btn-primary">Upload Excel</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="offer-body">
-                                    <div className="table-responsive">
-                                        <UserTable preview={(user) => this.previewUser(user)} data={this.state.users} />
-                                    </div>
+                                    <UserDataTable previewUser={(user) => this.previewUser(user)} data={this.state.users} />
                                 </div>
 
                             </div>
@@ -271,18 +347,24 @@ class Users extends Component {
                                 <table className="table table-bordered font-sm">
                                     <tbody>
                                         <tr>
+                                            <td style={{width: 150}}>ID</td>
+                                            <td>{this.state.user.user_id}</td>
+                                        </tr>
+                                        <tr>
                                             <td style={{width: 150}}>Nama</td>
                                             <td>{this.state.user.user_fullname}</td>
                                         </tr>
                                         <tr>
                                             <td>Username</td>
-                                            <td>{this.state.user.user_name}</td>
+                                            <td><strong>{this.state.user.user_name}</strong></td>
                                         </tr>
                                         <tr>
                                             <td>Point</td>
-                                            <td>{this.state.user.user_point} <button onClick={this.handlePlusPointButton} style={{float: "right"}} className="btn btn-primary btn-sm"><Icon size={12} icon={plus}></Icon></button></td>
+                                            <td>{this.state.user.user_point}
+                                            {/* <button onClick={this.handlePlusPointButton} style={{float: "right"}} className="btn btn-primary btn-sm"><Icon size={12} icon={plus}></Icon></button> */}
+                                            </td>
                                         </tr>
-                                        {
+                                        {/* {
                                             this.state.addPointMode ?
                                             <tr>
                                                 <td colSpan={2}>
@@ -293,7 +375,7 @@ class Users extends Component {
                                             </tr>
                                             :
                                             <></>
-                                        }
+                                        } */}
                                         <tr>
                                             <td>Created Date</td>
                                             <td>{this.state.user.user_created_date}</td>
@@ -330,8 +412,8 @@ class Users extends Component {
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button onClick={this.importExcel} className="btn btn-primary btn-sm mr-2">Submit</button>
-                            <button onClick={this.closeModal} className="btn btn-secondary btn-sm">Cancel</button>
+                            {this.state.excel_loading ? <button className="btn btn-secondary btn-sm mr-2">Loading</button> : <button onClick={this.importExcel} className="btn btn-primary btn-sm mr-2">Submit</button>}
+                            {this.state.excel_loading ? null : <button onClick={this.closeModal} className="btn btn-secondary btn-sm">Cancel</button>}
                         </div>
                     </Modal>
                     :

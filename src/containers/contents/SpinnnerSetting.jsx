@@ -10,6 +10,8 @@ class SpinnerSetting extends Component {
         this.state = {
             slot : [],
             spinner_data : {
+                spinner_count : "",
+                spinner_cost : "",
                 probs : [],
                 values : [],
             },
@@ -44,6 +46,7 @@ class SpinnerSetting extends Component {
             } else {
                 counter += 0;
             }
+            return true;
         })
         
 
@@ -56,6 +59,7 @@ class SpinnerSetting extends Component {
     handleChangeText2 = (input) => {
         let name = input.target.name;
         let admin_data = {...this.state.admin_data};
+        let spinner_data = {...this.state.spinner_data}
         switch(name){
             case "email":
                 admin_data.email = input.target.value;
@@ -63,12 +67,21 @@ class SpinnerSetting extends Component {
             case "password":
                 admin_data.password = input.target.value;
                 break;
+            case "spinner_cost":
+                spinner_data.spinner_cost = input.target.value;
+                break;
+            case "spinner_count":
+                spinner_data.spinner_count = input.target.value;
+                break;
             default:
                 return false
         }
         
         this.setState({
-            admin_data : admin_data
+            admin_data : admin_data,
+            spinner_data : spinner_data
+        }, () => {
+            console.log(this.state.spinner_data)
         })
     }
     
@@ -100,6 +113,9 @@ class SpinnerSetting extends Component {
                     noValue = true;
                 }
             }
+            if(spinner_data.spinner_cost === ""){
+                noValue = true;
+            }
             if(noValue){
                 alert("Please fill all input field!");
             } else {
@@ -128,6 +144,9 @@ class SpinnerSetting extends Component {
                             console.log(result);
                             if(result.status){
                                 alert(result.message)
+                                this.setState({
+                                    showModal : false,
+                                })
                             } else {
                                 alert(result.message);
                             }
@@ -146,10 +165,14 @@ class SpinnerSetting extends Component {
         API.getSpinnerSettingData(params)
         .then((result) => {
             if(result.status){
-                result.data.map((value, index) => {
+                result.data.map((value) => {
                     spinner_data.probs.push(parseFloat(value.spinner_probablity));
                     spinner_data.values.push(isNaN(value.spinner_value) ? value.spinner_value : parseFloat(value.spinner_value) );
+                    return true;
                 })
+                spinner_data.spinner_cost = result.data2[0].spinnercost_value;
+                spinner_data.spinner_count = result.data3[0].spinner_count;
+                console.log()
                 this.setState({
                     slot : result.data,
                     spinner_data : spinner_data
@@ -161,6 +184,8 @@ class SpinnerSetting extends Component {
     }
 
     componentDidMount(){
+        document.getElementById('panel-title').innerText = "Spinner Setting"
+        document.title = "Spinner Setting";
         this.getProbsSetting();
     }
 
@@ -175,6 +200,23 @@ class SpinnerSetting extends Component {
                                 <div className="row justify-content-center">
                                     <div className="col-12 col-sm-12 col-md-8 col-lg-8">
                                         <h2>Spinner Setting</h2>
+                                        <div className="form-group row">
+                                            <label className="col-12 col-sm-12 col-md-4 col-lg-4 col-form-label">Cost per spin</label>
+                                            <label className="col-12 col-sm-12 col-md-4 col-lg-4"></label>
+                                            <div className="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                <input onChange={this.handleChangeText2} className="form-control" type="number" name="spinner_cost" defaultValue={this.state.spinner_data.spinner_cost}/>
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="col-12 col-sm-12 col-md-4 col-lg-4 col-form-label">Spin per day</label>
+                                            <label className="col-12 col-sm-12 col-md-4 col-lg-4"></label>
+                                            <div className="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                <input onChange={this.handleChangeText2} className="form-control" type="number" name="spinner_count" defaultValue={this.state.spinner_data.spinner_count}/>
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <h3>Probablity Setting</h3>
+                                        </div>
                                         <div className="form-group row">
                                             <div className="col-12 col-sm-12 col-md-4 col-md-4"><strong>Slot</strong></div>
                                             <div className="col-12 col-sm-12 col-md-4 col-md-4"><strong>Value</strong></div>

@@ -1,3 +1,4 @@
+let key;
 export const Setting = {
     isOnline : false,
     onlinePath : 'http://kes.co.id/dev/paycrack/',
@@ -41,13 +42,14 @@ const request = (url, method, data, formData = false) => {
 
 const getUsers = (data = {}) => {
     let params = 0;
-    for(let key in data){
+    for(key in data){
         params++;
     }
     let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
     let id = `${typeof(data.id) !== "undefined" ? params > 1 ? "&id="+data.id : "id="+data.id : ""}`;
     let limit = `${typeof(data.limit) !== "undefined" ? params > 1 ? "&limit="+data.limit : "limit="+data.limit : ""}`;
-    let url = `api/users${params > 0 ? "?" : ""}${appkey}${id}${limit}`;
+    let offset = `${typeof(data.offset) !== "undefined" ? params > 1 ? "&offset="+data.offset : "offset="+data.offset : ""}`;
+    let url = `api/users${params > 0 ? "?" : ""}${appkey}${id}${limit}${offset}`;
     return request(url);
 }
 
@@ -88,7 +90,7 @@ const getOffers = (offer_id) => {
 
 const getItems = (data = {}) => {
     let params = 0;
-    for(let key in data){
+    for(key in data){
         params++
     }
     let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
@@ -120,17 +122,21 @@ const addPoint = (data = {}) => {
 
 const getHistoryPoint = (data = {}) => {
     let params = 0;
-    for(let key in data){
+    for(key in data){
         params++;
     }
     let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
-    let url = `api/history/point${params > 0 ? "?" : ""}${appkey}`;
+    let id = `${typeof(data.id) !== "undefined" ? params > 1 ? "&id="+data.id : "id="+data.id : ""}`;
+    let user_id = `${typeof(data.user_id) !== "undefined" ? params > 1 ? "&user_id="+data.user_id : "user_id="+data.user_id : ""}`;
+    let limit = `${typeof(data.limit) !== "undefined" ? params > 1 ? "&limit="+data.limit : "limit="+data.limit : ""}`;
+    let offset = `${typeof(data.offset) !== "undefined" ? params > 1 ? "&offset="+data.offset : "offset="+data.offset : ""}`;
+    let url = `api/history/point${params > 0 ? "?" : ""}${appkey}${id}${limit}${offset}${user_id}`;
     return request(url);
 }
 
 const getHistoryRedeem = (data = {}) => {
     let params = 0;
-    for(let key in data){
+    for(key in data){
         params++;
     }
     let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
@@ -152,7 +158,7 @@ const userImportExcel = (data = {}) => {
 
 const getSpinnerProbsData  = (data = {}) => {
     let params = 0;
-    for(let key in data){
+    for(key in data){
         params++
     }
     let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
@@ -165,7 +171,7 @@ const getSpinnerProbsData  = (data = {}) => {
 
 const getSpinnerSettingData  = (data = {}) => {
     let params = 0;
-    for(let key in data){
+    for(key in data){
         params++
     }
     let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
@@ -195,6 +201,30 @@ const adminLogout = (data = {}) => {
     return request(path, method, data);
 }
 
+const getDailySet = (data = {}) => {
+    let params = 0;
+    for(key in data){
+        params++
+    }
+    let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
+    let path = `api/dailypoint/set${params > 0 ? '?' : ""}${appkey}`;
+
+    return request(path);
+}
+
+const saveDailySet = (data = {}) => {
+    let path = "api/dailypoint/set";
+    let method = "POST";
+    return request(path, method, data);
+}
+
+const changeProbsStatus = (data = {}) => {
+    let path = "api/spinner/change_status";
+    let method = "POST";
+
+    return request(path, method, data)
+}
+
 const API  = {
     getUsers,
     createUser,
@@ -217,6 +247,9 @@ const API  = {
     addSpinnerProbsData,
     getSpinnerSettingData,
     updateSpinnerProbsSettingData,
+    getDailySet,
+    saveDailySet,
+    changeProbsStatus
 }
 
 export default API;

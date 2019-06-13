@@ -452,6 +452,20 @@ textarea.form-control.is-invalid {
   box-shadow: 0 0 2px 3px#eee;
 }
 
+.btn-success {
+  background-color: #2ecc71;
+  color : #fff;
+  border-color: #2ecc71;
+}
+.btn-success:hover, .btn-success:focus {
+  background-color: #2ecc71;
+  border-color: #2ecc71;
+}
+
+.btn-success:focus {
+  box-shadow: 0 0 2px 3px#35e881;
+}
+
 .btn-danger {
   background-color: #ff7675;
   color : #fff;
@@ -651,6 +665,15 @@ textarea.form-control.is-invalid {
 
 .react-datepicker__input-container {
   width:  100%
+}
+
+.ReactTable {
+  font-size: 14px;
+}
+
+.ReactTable .rt-th, .ReactTable .rt-td {
+  padding: 10px 14px !important;
+  line-height: 1.6
 }
 
 

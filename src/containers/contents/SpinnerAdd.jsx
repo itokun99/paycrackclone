@@ -80,6 +80,7 @@ class SpinnerAdd extends Component {
             } else {
                 countPercentage += 0;
             }
+            return true;
         })
 
         this.setState({
@@ -177,7 +178,7 @@ class SpinnerAdd extends Component {
         })
     }
     getDates = (startDate, stopDate) =>  {
-        var dateArray = new Array();
+        var dateArray = [];
         var currentDate = startDate;
         while (currentDate <= stopDate) {
             dateArray.push(new Date(currentDate));
@@ -202,11 +203,12 @@ class SpinnerAdd extends Component {
                 dateAvaiableRange.max = moment(maxDate).format("YYYY-MM-DD");
                 let exclude_date = [];
 
-                data.map((value, index) => {
+                data.map((value) => {
                     var datemin = value.probs_start_date;
                     var datemax = value.probs_end_date;
                     var exluded = this.getDates(moment(datemin).toDate(), moment(datemax).toDate());
                     exclude_date.push(...exluded);
+                    return true;
                 })
                 this.setState({
                     // dateAvaiableRange : dateAvaiableRange,AzerbAzerbaa

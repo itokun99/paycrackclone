@@ -11,7 +11,6 @@ const ContextProvider = (ChildrenComponent) => {
                 siteTitle : "PayCrack",
                 isLogin : false,
                 loginData : {},
-                // time : ""
             }
 
             handleCheckLogin = () => {

@@ -2,28 +2,37 @@ import React, {Component} from 'react';
 import ContentWrapper from '../ContentWrapper';
 import API from '../../services/Services';
 import { ContextConsumer } from '../../context/Context';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+import moment from 'moment';
 
+let interval = null;
 class Redeem extends Component {
     state = {
         historyRedeem : [],
+        noLoadData : false,
+        limitRecord : 100,
     }
 
-    getRedeemHistory = () => {
+    getRedeemHistory = (offset = this.state.historyRedeem.length , limit = this.state.limitRecord, action = null) => {
         let loginData = this.props.ContextState.loginData;
         let params = {
-            appkey : loginData.appkey
+            appkey : loginData.appkey,
+            offset : offset,
+            limit : limit
         }
         API.getHistoryRedeem(params)
         .then((result) => {
             if(result.status){
                 this.setState({
                     historyRedeem : result.data
-                })
+                }, action)
             } else {
                 if(result.code === 404){
                     this.setState({
-                        historyRedeem : [...this.state.historyRedeem]
-                    })
+                        historyRedeem : [...this.state.historyRedeem],
+                        noLoadData : true,
+                    }, action)
                 } else {
                     console.log(result.message)
                 }
@@ -61,16 +70,51 @@ class Redeem extends Component {
     }
 
     render(){
+        if(this.state.noLoadData){
+            clearInterval(interval);
+        }
+        const dataTableColumns = [
+            { 
+                Header : "#",
+                sortable : true,
+                maxWidth : 50, 
+                style : {textAlign : "center"}, 
+                Cell: row => (<div>{row.index+1}</div>),
+                filterable: false
+            },{ 
+                Header : "Username", 
+                sortable : true, 
+                accessor : "rh_user_name", 
+                style : {textAlign : "center"}, 
+            },{ 
+                Header : "Item", 
+                sortable : true, 
+                accessor : "rh_item_name", 
+                style : {textAlign : "center"}, 
+            }, { 
+                Header : "Status", 
+                sortable : true, 
+                accessor : "ph_point", 
+                style : {textAlign : "center"},
+                Cell : row => (<div>{moment(row.original.ph_date).format("DD MMMM YYYY")}</div>) 
+            },{ 
+                Header : "Status", 
+                sortable : true, 
+                accessor : "rh_status", 
+                style : {textAlign : "center"},
+                Cell : row => (<div>{row.original.rh_status === "1" ? "paid" : <button onClick={() => this.changeStatus(row.original.rh_id)} className="btn btn-sm btn-danger">accept</button>}</div>) 
+            }
+        ];
         return(
             <div className="offer-section">
                 <div className="row">
                     <div className="col-12">
                         <div className="redeem-main card">
                             <div className="redeem-top mb-3">
-                                <button className="btn btn-primary">Filter</button>
+                                {/* <button className="btn btn-primary">Filter</button> */}
                             </div>
                             <div className="redeem-body">
-                                <div className="table-responsive">
+                                {/* <div className="table-responsive">
                                     <table className="table table-bordered font-sm table-hover">
                                         <thead>
                                             <tr>
@@ -102,7 +146,15 @@ class Redeem extends Component {
                                             }
                                         </tbody>
                                     </table>
-                                </div>
+                                </div> */}
+                                <ReactTable
+                                    title="User Table"
+                                    columns={dataTableColumns}
+                                    data={this.state.historyRedeem}
+                                    selectableRows = {null}
+                                    defaultPageSize = {this.state.historyRedeem.length < 50 ? 20 : 50}
+                                    filterable={true}
+                                />
                             </div>
                         </div>
                     </div>
