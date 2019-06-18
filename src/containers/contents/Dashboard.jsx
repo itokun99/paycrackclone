@@ -10,7 +10,18 @@ class Dashboard extends Component {
     render(){
         return(
             <div className="dashboard-content">
-                Dashboard
+                <div className="row">
+                    <div className="col-12">
+                        <div className="card">
+                            <div className="dashboard-top">
+                                <h2>Welcome to Redeem Admin</h2>
+                            </div>
+                            <div className="dashboard-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         )
     }

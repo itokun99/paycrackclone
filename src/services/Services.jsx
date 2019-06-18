@@ -54,6 +54,31 @@ const getUsers = (data = {}) => {
     return request(url);
 }
 
+const getAdmin = (data = {}) => {
+    let params = 0;
+    for(key in data){
+        params++;
+    }
+    let appkey = `${typeof(data.appkey) !== "undefined" ? params > 1 ? "&appkey="+data.appkey : "appkey="+data.appkey : ""}`;
+    let id = `${typeof(data.id) !== "undefined" ? params > 1 ? "&id="+data.id : "id="+data.id : ""}`;
+    let limit = `${typeof(data.limit) !== "undefined" ? params > 1 ? "&limit="+data.limit : "limit="+data.limit : ""}`;
+    let offset = `${typeof(data.offset) !== "undefined" ? params > 1 ? "&offset="+data.offset : "offset="+data.offset : ""}`;
+    let url = `api/users/admin${params > 0 ? "?" : ""}${appkey}${id}${limit}${offset}`;
+    return request(url);
+}
+
+const createAdmin = (data = {}) => {
+    let url = "api/users/admin";
+    let method = "POST";
+    return request(url, method, data);
+}
+
+const updateAdmin = (data = {}) => {
+    let url = "api/users/admin";
+    let method = "PUT";
+    return request(url, method, data);
+}
+
 const createUser = (data = {}) => {
     let url = "api/users";
     let method = "POST";
@@ -322,7 +347,10 @@ const API  = {
     updateBannerSetting,
     deleteSpinnerProbs,
     searchPointHistory,
-    getJackpotHistory
+    getJackpotHistory,
+    getAdmin,
+    createAdmin,
+    updateAdmin,
 }
 
 export default API;

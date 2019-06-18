@@ -18,6 +18,8 @@ import DailyCheckSetting from '../containers/contents/DailyCheckSetting';
 import Banner from '../containers/contents/Banner';
 import SpinnerEdit from '../containers/contents/SpinnerEdit';
 import JackpotHistory from '../containers/contents/JackpotHistory';
+import AdminList from '../containers/contents/AdminList';
+import AdminAdd from '../containers/contents/AdminAdd';
 
 const RouterWrapper = (Navigation) => {
     return(
@@ -53,6 +55,8 @@ const Navigation = (props) => {
                         <Route path ={`${Config.basePath}dailypointset`} exact component={DailyCheckSetting} />
                         <Route path ={`${Config.basePath}setting`} exact component={SettingPage} />
                         <Route path ={`${Config.basePath}banner`} exact component={Banner} />
+                        <Route path ={`${Config.basePath}admin`} exact component={AdminList} />
+                        <Route path ={`${Config.basePath}admin/add`} exact component={AdminAdd} />
                     </>
                 :
                     <>
