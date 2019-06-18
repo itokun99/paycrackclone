@@ -31,6 +31,30 @@ class SpinnerProbs extends Component {
         })
     }
 
+    deleteProbs = (probs_id) => {
+        let loginData = this.props.ContextState.loginData;
+        let params = {
+            appkey : loginData.appkey,
+            probs_id : probs_id,
+        }
+
+        let conf = window.confirm('Are you sure to delete this?');
+        if(conf){
+            API.deleteSpinnerProbs(params)
+            .then((result) => {
+                if(result.status){
+                    alert(result.message)
+                    this.getProbData();      
+                } else {
+                    console.log(result);
+                    alert(result.message)                    
+                }
+            })
+        } else {
+            return false;
+        }
+    }
+
     changeStatus = (probs_id, probs_status) => {
         let loginData = this.props.ContextState.loginData;
         let params = {
@@ -52,6 +76,12 @@ class SpinnerProbs extends Component {
         } else {
             return false;
         }
+    }
+
+    linkToEdit = (id, data) => {
+        this.props.history.push(`${Setting.basePath}spinner/edit/${id}`, {
+            probs : data
+        })
     }
 
     componentDidMount(){
@@ -80,6 +110,7 @@ class SpinnerProbs extends Component {
                                                 <th style={{width : 150, textAlign: "center"}}>End Date</th>
                                                 <th>Probablity</th>
                                                 <th style={{width : 150, textAlign: "center"}}>Status</th>
+                                                <th style={{width : 150, textAlign: "center"}}>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -92,7 +123,11 @@ class SpinnerProbs extends Component {
                                                             <td style={{width : 150, textAlign: "center"}}>{moment(value.probs_start_date).format('DD MMMM YYYY')}</td>
                                                             <td style={{width : 150, textAlign: "center"}}>{moment(value.probs_end_date).format('DD MMMM YYYY')}</td>
                                                             <td>{value.probs_data}</td>
-                                                            <td style={{width : 150, textAlign: "center"}}>{value.probs_status === "1" ? <button onClick={() => this.changeStatus(value.probs_id, 0)} className="btn btn-success btn-sm">Active</button> : <button onClick={() => this.changeStatus(value.probs_id, 1)} className="btn btn-danger btn-sm">Expired</button> }</td>
+                                                            <td style={{width : 150, textAlign: "center"}}>{value.probs_status === "1" ? <button onClick={() => this.changeStatus(value.probs_id, 0)} className="btn btn-success btn-sm">Active</button> : <button onClick={() => this.changeStatus(value.probs_id, 1)} className="btn btn-danger btn-sm">Expired</button>}</td>
+                                                            <td style={{width : 150, textAlign: "center"}}>
+                                                                <button onClick={() => this.linkToEdit(value.probs_id, value)} className="btn btn-primary btn-sm mr-2">Edit</button>
+                                                                <button onClick={() => this.deleteProbs(value.probs_id)} className="btn btn-danger btn-sm">Delete</button>
+                                                            </td>
                                                         </tr>
                                                     )
                                                 })

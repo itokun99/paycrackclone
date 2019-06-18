@@ -309,6 +309,16 @@ code {
   white-space: nowrap;
   overflow: hidden; */
 }
+.stock-tag {
+  background-color: green;
+  position: absolute;
+  right: 0;
+  display: inline-block;
+  padding: 4px 8px;
+  color: #fff;
+  bottom: 0;
+  font-size: 14px;
+}
 .card-img {
   margin-right: -24px;
   margin-left: -24px;
@@ -319,6 +329,7 @@ code {
   padding-bottom: 100%;
   background-size: cover;
   background-position: center;
+  position: relative;
 }
 
 .card-img img {
@@ -480,9 +491,24 @@ textarea.form-control.is-invalid {
   box-shadow: 0 0 2px 3px#ff7675;
 }
 
+.btn-default {
+  background-color: #3498db;
+  color : #fff;
+  border-color: #3498db;
+}
+.btn-default:hover, .btn-default:focus {
+  background-color: #2980b9;
+  border-color: #2980b9;
+}
+
+.btn-default:focus {
+  box-shadow: 0 0 2px 3px#2980b9;
+}
+
 .btn-block {
   width: 100%;
 }
+
 
 .m-0 {
   margin: 0;

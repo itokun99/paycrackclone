@@ -15,6 +15,9 @@ import SpinnnerSetting from '../containers/contents/SpinnnerSetting';
 import SpinnerProbs from '../containers/contents/SpinnerProbs';
 import SpinnerAdd from '../containers/contents/SpinnerAdd';
 import DailyCheckSetting from '../containers/contents/DailyCheckSetting';
+import Banner from '../containers/contents/Banner';
+import SpinnerEdit from '../containers/contents/SpinnerEdit';
+import JackpotHistory from '../containers/contents/JackpotHistory';
 
 const RouterWrapper = (Navigation) => {
     return(
@@ -38,15 +41,18 @@ const Navigation = (props) => {
                         <Route path ={`${Config.basePath}`} component={Dashboard} exact />
                         <Route path ={`${Config.basePath}point-history`} exact component={PointHistory} />
                         <Route path ={`${Config.basePath}redeem`} exact component={Redeem} />
+                        <Route path ={`${Config.basePath}jackpot`} exact component={JackpotHistory} />
                         <Route path ={`${Config.basePath}user`} exact component={Users} /> 
                         <Route path ={`${Config.basePath}user/add`} exact component={UserAdd} /> 
                         <Route path ={`${Config.basePath}user/edit/:id`} exact component={UserEdit} /> 
                         <Route path ={`${Config.basePath}item`} exact component={Items} />
                         <Route path ={`${Config.basePath}spinner`} exact component={SpinnerProbs} />
                         <Route path ={`${Config.basePath}spinner/add`} exact component={SpinnerAdd} />
+                        <Route path ={`${Config.basePath}spinner/edit/:id`} exact component={SpinnerEdit} />
                         <Route path ={`${Config.basePath}spinner/setting`} exact component={SpinnnerSetting} />
                         <Route path ={`${Config.basePath}dailypointset`} exact component={DailyCheckSetting} />
                         <Route path ={`${Config.basePath}setting`} exact component={SettingPage} />
+                        <Route path ={`${Config.basePath}banner`} exact component={Banner} />
                     </>
                 :
                     <>

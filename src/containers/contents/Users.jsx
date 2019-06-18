@@ -380,6 +380,11 @@ class Users extends Component {
                                             <td>Created Date</td>
                                             <td>{this.state.user.user_created_date}</td>
                                         </tr>
+
+                                        <tr>
+                                            <td>Address</td>
+                                            <td>{this.state.user.user_address === "" ? "(not inserted)" : this.state.user.user_address }</td>
+                                        </tr>
                                         <tr>
                                             <td>Status</td>
                                             <td>{this.state.user.user_status === "1" ? "Active" : "Deactive" }</td>

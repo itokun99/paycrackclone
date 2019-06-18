@@ -9,7 +9,6 @@ class UserEdit extends Component {
             user_id : "",
             user_name: "",
             user_fullname: "",
-            user_old_password : "",
             user_password : "",
             user_verify_password : ""
         },
@@ -27,9 +26,6 @@ class UserEdit extends Component {
                 break;
             case "user_name":
                 user.user_name = input.target.value;
-                break;
-            case "user_old_password":
-                user.user_old_password = input.target.value;
                 break;
             case "user_password":
                 user.user_password = input.target.value;
@@ -63,7 +59,7 @@ class UserEdit extends Component {
             }
         } else {
             for(let key in user){
-                if(user[key] === "" && key !== "user_old_password" && key !== "user_password" && key !== "user_verify_password"){
+                if(key !== "user_password" && key !== "user_verify_password"){
                     noValue = true
                 }
             }
@@ -90,7 +86,6 @@ class UserEdit extends Component {
     handleChangePassword = () => {
         let user = {...this.state.user};
         user.user_password = "";
-        user.user_old_password = "";
         user.user_verify_password = "";
         this.setState({
             changePassword : !this.state.changePassword,
@@ -116,8 +111,6 @@ class UserEdit extends Component {
                     user.user_fullname = data.user_fullname;
                     this.setState({
                         user : user
-                    }, () => {
-                        console.log(this.state.user);
                     })
                 } else {
                     alert(response.message);
@@ -131,8 +124,6 @@ class UserEdit extends Component {
             user.user_fullname = data.user_fullname; 
             this.setState({
                 user : user
-            }, () => {
-                console.log(this.state.user);
             })
         }
     }
@@ -144,7 +135,6 @@ class UserEdit extends Component {
     }
 
     render(){
-        console.log(this)
         return(
             <div className="adduser-section">
                 <div className="row">
@@ -174,12 +164,6 @@ class UserEdit extends Component {
                                                 <label className="col-12 col-sm-12 col-md-3 col-lg-3 col-form-label">Password</label>
                                                 <div className="col-12 col-sm-12 col-md-9 col-lg-9">
                                                     <span onClick={this.handleChangePassword} style={{display: "inline-block",color : "blue", paddingTop : 8, cursor : "pointer"}}>use old password?</span>
-                                                </div>
-                                            </div>
-                                            <div className="form-group row">
-                                                <label className="col-12 col-sm-12 col-md-3 col-lg-3 col-form-label"></label>
-                                                <div className="col-12 col-sm-12 col-md-9 col-lg-9">
-                                                    <input onChange={(e) => this.handleChangeText(e)} name="user_old_password" className="form-control" type="password" placeholder="Old Password" defaultValue={this.state.user.user_old_password} />
                                                 </div>
                                             </div>
                                             <div className="form-group row">

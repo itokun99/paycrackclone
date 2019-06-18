@@ -20,6 +20,7 @@ class PointHistory extends Component {
         totalRecord : 20,
         limitRecord : 60,
         noLoadData : false,
+        inputSearch : "",
     }
 
 
@@ -115,12 +116,51 @@ class PointHistory extends Component {
         document.getElementById('panel-title').innerText = "History Point";
         document.title = "Point History";
 
-        this.getHistoryPoint(this.state.historyPoint.length, this.state.limitRecord, () => {
-            interval = setInterval(() => {
-                this.getHistoryPoint()
-            }, 1000)
-        });
+        // this.getHistoryPoint(this.state.historyPoint.length, this.state.limitRecord, () => {
+        //     interval = setInterval(() => {
+        //         this.getHistoryPoint()
+        //     }, 1000)
+        // });
         // this.realTimeUpdate();
+    }
+
+    handleSearch = (input) => {
+        let inputSearch = this.state.inputSearch;
+        let value = input.target.value;
+        this.setState({
+            inputSearch : value
+        },() => {
+            console.log(this.state.inputSearch)
+        })
+    }
+
+    submitSearch = () => {
+        let loginData = this.props.ContextState.loginData;
+        let params = {
+            appkey : loginData.appkey,
+            search : this.state.inputSearch
+        }
+        API.searchPointHistory(params)
+        .then((result) => {
+            console.log(result)
+            if(result.status){
+                let data = result.data;
+                this.setState({
+                    historyPoint : [...data]
+                })
+            } else {
+                if(result.code === 404){
+                    this.setState({
+                        historyPoint : [],
+                    }, () => {
+                        window.alert(result.message)
+                    })
+                } else {
+                    console.log(result);
+                    window.alert(result.message)
+                }
+            }
+        })
     }
 
     render(){
@@ -166,8 +206,17 @@ class PointHistory extends Component {
                     <div className="col-12">
                         <div className="history-main card">
                             <div className="history-top">
-                                <div className="row justify-content-between">
-
+                                <div className="row">
+                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                        <div className="form-group row mb-4">
+                                            <div className="col-8">
+                                                <input type="text" onChange={(e) => this.handleSearch(e)} className="form-control" name="searchInput" placeholder="Search.." />
+                                            </div>
+                                            <div className="col-4">
+                                                <button onClick={this.submitSearch} className="btn btn-primary">Search</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className="history-body">
@@ -176,7 +225,7 @@ class PointHistory extends Component {
                                     columns={dataTableColumns}
                                     data={this.state.historyPoint}
                                     selectableRows = {null}
-                                    defaultPageSize = {this.state.historyPoint.length < 50 ? 20 : 50}
+                                    defaultPageSize = {this.state.historyPoint.length < 20 ? 20 : 50}
                                     filterable={true}
                                 />
                             </div>

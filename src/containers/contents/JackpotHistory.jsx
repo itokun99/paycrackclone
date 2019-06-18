@@ -10,27 +10,28 @@ let interval = null;
 class Redeem extends Component {
     state = {
         historyRedeem : [],
+        historyJackpot : [],
         noLoadData : false,
         limitRecord : 100,
     }
 
-    getRedeemHistory = (offset = this.state.historyRedeem.length , limit = this.state.limitRecord, action = null) => {
+    getJackpotHistory = (offset = this.state.historyRedeem.length , limit = this.state.limitRecord, action = null) => {
         let loginData = this.props.ContextState.loginData;
         let params = {
             appkey : loginData.appkey,
             offset : offset,
             limit : limit
         }
-        API.getHistoryRedeem(params)
+        API.getJackpotHistory(params)
         .then((result) => {
             if(result.status){
                 this.setState({
-                    historyRedeem : result.data
+                    historyJackpot : result.data
                 }, action)
             } else {
                 if(result.code === 404){
                     this.setState({
-                        historyRedeem : [...this.state.historyRedeem],
+                        historyJackpot : [...this.state.historyJackpot],
                         noLoadData : true,
                     }, action)
                 } else {
@@ -40,15 +41,15 @@ class Redeem extends Component {
         })
     }
 
-    changeStatus = (redeem_id, redeem_status = "0") => {
+    changeStatus = (id, status = "0") => {
         let loginData = this.props.ContextState.loginData;
-        let conf = window.confirm("Want to change this redeem status?");
-        switch(redeem_status){
+        let conf = window.confirm("Want to change this jackpot status?");
+        switch(status){
             case "0":
-                    redeem_status = "1";
+                    status = "1";
                 break;
             case "1":
-                    redeem_status = "2";
+                    status = "2";
                 break;
             default:
                 return false;
@@ -56,14 +57,14 @@ class Redeem extends Component {
         if(conf){
             let data  =  {
                 appkey : loginData.appkey,
-                redeem_id : redeem_id,
-                redeem_status : redeem_status
+                jackpot_id : id,
+                jackpot_status : status
             };
-            API.updateRedeemStatus(data)
+            API.updateJackpotStatus(data)
             .then((result) => {
                 if(result.status){
                     window.alert(result.message);
-                    this.getRedeemHistory();
+                    this.getJackpotHistory();
                 } else {
                     console.log(result);
                     window.alert(result.message);
@@ -75,9 +76,9 @@ class Redeem extends Component {
     }
 
     componentDidMount(){
-        document.getElementById('panel-title').innerText = "Redeem List";
-        document.title = "Redeem List"
-        this.getRedeemHistory();
+        document.getElementById('panel-title').innerText = "Jackpot List";
+        document.title = "Jackpot List"
+        this.getJackpotHistory();
     }
 
     render(){
@@ -95,35 +96,35 @@ class Redeem extends Component {
             },{ 
                 Header : "Username", 
                 sortable : true, 
-                accessor : "rh_user_name", 
+                accessor : "user_name", 
                 style : {textAlign : "center"}, 
             },{ 
                 Header : "Item", 
                 sortable : true, 
-                accessor : "rh_item_name", 
+                accessor : "jackpot_item", 
                 style : {textAlign : "center"}, 
             }, { 
                 Header : "Date", 
                 sortable : true, 
-                accessor : "ph_point", 
+                accessor : "jackpot_date", 
                 style : {textAlign : "center"},
-                Cell : row => (<div>{moment(row.original.ph_date).format("DD MMMM YYYY")}</div>) 
+                Cell : row => (<div>{moment(row.original.jackpot_date).format("DD MMMM YYYY")}</div>) 
             },{ 
                 Header : "Status", 
                 sortable : true, 
-                accessor : "rh_status", 
+                accessor : "jackpot_status", 
                 style : {textAlign : "center"},
-                Cell : row => (<div>{row.original.rh_status === "0" ? 
+                Cell : row => (<div>{row.original.jackpot_status === "0" ? 
                 <button 
-                    onClick={() => this.changeStatus(row.original.rh_id, row.original.rh_status)} 
+                    onClick={() => this.changeStatus(row.original.jackpot_id, row.original.jackpot_status)} 
                     className="btn btn-sm btn-default">accept
                 </button> : 
-                row.original.rh_status === "1" ?
+                row.original.jackpot_status === "1" ?
                 <button 
-                    onClick={() => this.changeStatus(row.original.rh_id, row.original.rh_status)} 
+                    onClick={() => this.changeStatus(row.original.jackpot_id, row.original.jackpot_status)} 
                     className="btn btn-sm btn-primary">on proccess
                 </button>
-                : row.original.rh_status === "2" ?
+                : row.original.jackpot_status === "2" ?
                 <button 
                     className="btn btn-sm btn-success">success
                 </button>
@@ -141,15 +142,14 @@ class Redeem extends Component {
                     <div className="col-12">
                         <div className="redeem-main card">
                             <div className="redeem-top mb-3">
-                                {/* <button className="btn btn-primary">Filter</button> */}
                             </div>
                             <div className="redeem-body">
                                 <ReactTable
                                     title="User Table"
                                     columns={dataTableColumns}
-                                    data={this.state.historyRedeem}
+                                    data={this.state.historyJackpot}
                                     selectableRows = {null}
-                                    defaultPageSize = {this.state.historyRedeem.length < 50 ? 20 : 50}
+                                    defaultPageSize = {this.state.historyJackpot.length < 50 ? 20 : 50}
                                     filterable={true}
                                 />
                             </div>

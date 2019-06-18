@@ -20,6 +20,7 @@ class Items extends Component {
             item_description : "",
             item_pic_file: "",
             item_pic_source : "",
+            item_quantity : "",
         },
         isEdit : false,
     }
@@ -84,6 +85,7 @@ class Items extends Component {
 
     handleEditButton = (item) => {
         let itemNew = {
+            item_quantity : item.item_quantity,
             item_id : item.item_id,
             item_name : item.item_name,
             item_point : item.item_point,
@@ -133,6 +135,7 @@ class Items extends Component {
                         isEdit : false,
                         modalShow : false,
                         itemNew : {
+                            item_quantity : "",
                             item_name : "",
                             item_point : "",
                             item_description : "",
@@ -174,6 +177,7 @@ class Items extends Component {
             modalShow : true,
             modalTitle : title,
             itemNew : {
+                item_quantity : "",
                 item_name : "",
                 item_point : "",
                 item_description : "",
@@ -189,6 +193,7 @@ class Items extends Component {
             modalShow : false,
             modalTitle : "",
             itemNew : {
+                item_quantity : "",
                 item_name : "",
                 item_point : "",
                 item_description : "",
@@ -213,6 +218,9 @@ class Items extends Component {
                 break;
             case "item_description":
                 newItem.item_description = value 
+                break;
+            case "item_quantity":
+                newItem.item_quantity = value 
                 break;
             case "item_pic":
                 uploadImage = true
@@ -263,7 +271,7 @@ class Items extends Component {
                                                 <div key={index} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                                                     <div className="item-content card">
                                                         <div className="card-img" style={{backgroundImage: `url(${Setting.isOnline ? Setting.onlinePath : Setting.offlinePath}${item.item_pic})`}}>
-                                                            {/* <img alt={item.item_title} title={item.item_title} src={`${Setting.isOnline ? Setting.onlinePath : Setting.offlinePath}${item.item_pic}`} /> */}
+                                                            <span className="stock-tag" style={{...parseInt(item.item_quantity) > 0 ? null : {backgroundColor : "red"}}}>{parseInt(item.item_quantity) > 0 ? "Stock : " + item.item_quantity : "Empty Stock"}</span>
                                                         </div>
                                                         <h4 className="item-title card-title">{item.item_name}</h4>
                                                         <p className="item-description card-text">{item.item_point} Point</p>
@@ -308,6 +316,10 @@ class Items extends Component {
                                 <div className="form-group">
                                     <label>Point value</label>
                                     <input onChange={(e) => this.handleChangeText(e)} type="number" className="form-control" name="item_point" placeholder="Value" defaultValue={this.state.itemNew.item_point} />
+                                </div>
+                                <div className="form-group">
+                                    <label>Quantity</label>
+                                    <input onChange={(e) => this.handleChangeText(e)} type="number" className="form-control" name="item_quantity" placeholder="Value" defaultValue={this.state.itemNew.item_quantity} />
                                 </div>
                                 <div className="form-group m-0">
                                     <label>Description</label>
