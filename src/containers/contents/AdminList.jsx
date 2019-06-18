@@ -38,6 +38,31 @@ class AdminList extends Component {
         })
     }
 
+    linkToEdit = (value) => {
+        this.props.history.push(`${Setting.basePath}admin/edit/${value.user_id}`, {
+            user_data : value,
+        })
+    }
+
+    deleteUser = (user_id) => {
+        let conf = window.confirm("Are you sure want to delete this user?");
+        if(conf){
+            let loginData = this.props.ContextState.loginData;
+            let appkey = loginData.appkey
+            API.deleteAdmin(appkey, user_id).then((response) => {
+                if(response.status){
+                    alert(response.message);
+                    this.getList();
+                } else {
+                    console.log(response);
+                    alert(response.message);
+                }
+            })
+        } else {
+            return false;
+        }
+    }
+
     componentDidMount(){
         document.getElementById('panel-title').innerText = "Admin List";
         document.title = "Admin List"
@@ -93,8 +118,8 @@ class AdminList extends Component {
                                                                 (
                                                                     <td>
                                                                         <div className="action-wrapper" style={{textAlign : "center"}}>
-                                                                            <button className="btn btn-default mr-2">Edit</button>
-                                                                            <button className="btn btn-danger">Delete</button>
+                                                                            <button onClick={() => this.linkToEdit(value)} className="btn btn-default mr-2">Edit</button>
+                                                                            <button onClick={() => this.deleteUser(value.user_id)} className="btn btn-danger">Delete</button>
                                                                         </div>
                                                                     </td>
                                                                 )

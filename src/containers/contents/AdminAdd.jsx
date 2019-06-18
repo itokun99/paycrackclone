@@ -42,7 +42,7 @@ class AdminAdd extends Component {
             .then((response) => {
                 if(response.status){
                     alert(response.message);
-                    this.props.history.push(`${Config.basePath}user`);
+                    this.props.history.push(`${Config.basePath}admin`);
                 } else {
                     alert(response.message);
                     console.log(response);
@@ -133,7 +133,7 @@ class AdminAdd extends Component {
                                             <label className="col-12 col-sm-12 col-md-3 col-lg-3"></label>
                                             <div className="col-12 col-sm-12 col-md-9 col-lg-9">
                                                 {this.state.matchPassword ? <button onClick={this.saveUser} className="btn btn-primary mr-2">Save</button> : <button className="btn btn-secondary mr-2">Save</button>}
-                                                <Link to={`${Config.basePath}user`} className="btn btn-secondary">Back</Link>
+                                                <Link to={`${Config.basePath}admin`} className="btn btn-secondary">Back</Link>
                                             </div>
                                         </div>
                                     </div>

@@ -20,6 +20,7 @@ import SpinnerEdit from '../containers/contents/SpinnerEdit';
 import JackpotHistory from '../containers/contents/JackpotHistory';
 import AdminList from '../containers/contents/AdminList';
 import AdminAdd from '../containers/contents/AdminAdd';
+import AdminEdit from '../containers/contents/AdminEdit';
 
 const RouterWrapper = (Navigation) => {
     return(
@@ -57,6 +58,7 @@ const Navigation = (props) => {
                         <Route path ={`${Config.basePath}banner`} exact component={Banner} />
                         <Route path ={`${Config.basePath}admin`} exact component={AdminList} />
                         <Route path ={`${Config.basePath}admin/add`} exact component={AdminAdd} />
+                        <Route path ={`${Config.basePath}admin/edit/:id`} exact component={AdminEdit} />
                     </>
                 :
                     <>

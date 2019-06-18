@@ -104,7 +104,7 @@ const loginAdmin = (data = {}) => {
 }
 
 const deleteAdmin = (appkey,admin_id) => {
-    let url = `api/users/admin?appkey=${appkey}&user_id=${admin_id}`;
+    let url = `api/users/admin?appkey=${appkey}&id=${admin_id}`;
     let method = "DELETE";
     return request(url, method);
 }
