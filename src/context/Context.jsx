@@ -24,14 +24,6 @@ const ContextProvider = (ChildrenComponent) => {
                     }
                 }
             }
-            // handleTime = () => {
-            //     setInterval(() => {
-            //         let newTime = new Date().toLocaleTimeString();
-            //         this.setState({
-            //             time : newTime
-            //         })
-            //     }, 1000)
-            // }
 
             dispatch = (action) => {
                 let loginData = {...this.state.loginData};
