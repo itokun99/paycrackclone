@@ -291,6 +291,12 @@ const updateBannerSetting = (data = {}) => {
     return request(path, method, data);
 }
 
+const userChangeStatus = (data = {}) => {
+    let method = "POST";
+    let path = 'api/users/user_change_status';
+    return request(path, method, data);
+}
+
 const searchPointHistory = (data = {}) => {
     let params = 0;
     for(key in data){
@@ -351,6 +357,7 @@ const API  = {
     getAdmin,
     createAdmin,
     updateAdmin,
+    userChangeStatus,
 }
 
 export default API;

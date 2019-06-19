@@ -68,7 +68,7 @@ class Header extends Component {
                                     <div className="profile-dropdown">
                                         <ul>
                                             <li><span>{this.state.admin.user_fullname}</span></li>
-                                            <li><Link to={`${Config.basePath}`}>About</Link></li>
+                                            {/* <li><Link to={`${Config.basePath}`}>About</Link></li> */}
                                             <li><span onClick={this.logout}>Logout</span></li>
                                         </ul>
                                     </div>

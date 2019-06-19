@@ -94,8 +94,8 @@ class Login extends Component {
                             {this.state.alertStatus ? <Alert type={this.state.alertData.type} message={this.state.alertData.message} style={{textAlign: "center"}} /> : ""}
                         </div>
                         <div className="form-group">
-                            <label>Email</label>
-                            <input onChange={(e) => this.handleTextChange(e)} type="email" className="form-control" name="email" placeholder="your@mail.com" />
+                            <label>Admin</label>
+                            <input onChange={(e) => this.handleTextChange(e)} type="text" className="form-control" name="email" placeholder="Admin username" />
                         </div>
                         <div className="form-group">
                             <label>Password</label>

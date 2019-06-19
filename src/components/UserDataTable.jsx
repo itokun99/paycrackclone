@@ -1,6 +1,7 @@
 import React  from 'react';
 import ReactTable from 'react-table';
-import 'react-table/react-table.css'
+import 'react-table/react-table.css';
+import moment from 'moment';
 
 
 const UserDataTable = (props) => {
@@ -36,6 +37,22 @@ const UserDataTable = (props) => {
             accessor : "user_point", 
             style : {textAlign : "center"}
         },{ 
+            Header : "Last Login", 
+            sortable : true, 
+            accessor : "user_lastlogin", 
+            style : {textAlign : "center"},
+            Cell : row => {
+                if(row.value !== null){
+                    return(
+                        <div>{moment(row.value).format("DD MMMM YYYY")}</div>
+                    )
+                } else {
+                    return(
+                        <div>no last login</div>
+                    )
+                }
+            }
+        },{ 
             Header : "Status", 
             accessor : "user_status", 
             sortable : true, 
@@ -47,7 +64,20 @@ const UserDataTable = (props) => {
                 } else {
                     status = "Deactive"
                 }
-                return <div>{status}</div>
+                return (
+                    <div>
+                        {
+                            row.value === "1" ?
+                            (
+                                <button onClick={() => props.changeStatus(row.original.user_id, 0)} className="btn btn-sm btn-success">{status}</button>
+                            )
+                            :
+                            (
+                                <button onClick={() => props.changeStatus(row.original.user_id, 1)} className="btn btn-sm btn-danger">{status}</button>
+                            )
+                        }
+                    </div>
+                )
             },
             Filter: ({ filter, onChange }) =>
             <select

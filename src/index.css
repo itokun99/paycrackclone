@@ -702,6 +702,35 @@ textarea.form-control.is-invalid {
   line-height: 1.6
 }
 
+.shortcut {
+  border: 3px solid #222;
+  border-radius: 8px;
+  text-align: center;
+  transition : .2s;
+}
+.shortcut a {
+  text-decoration: none;
+  color: #222;
+  transition : .2s;
+}
+.shortcut:hover {
+  border-color : #FAA61A;
+}
+.shortcut a:hover {
+  color : #FAA61A;
+}
+
+.s-holder {
+  padding: 24px 14px 0 24px;
+  text-align: center;
+}
+
+h4.s-title {
+  font-size: 18px;
+  margin: 0;
+  padding: 14px;
+}
+
 
 @media(max-width:768px){
   .sidebar-section {

@@ -209,11 +209,43 @@ class Users extends Component {
             API.deleteUser(appkey, user_id).then((response) => {
                 if(response.status){
                     alert(response.message);
-                    this.getUser();
-                    this.closeModal();
+                    this.setState({
+                        users : []
+                    },() => {
+                        this.intervalLoad();
+                        this.closeModal();
+                    })
                 } else {
                     console.log(response);
                     alert(response.message);
+                }
+            })
+        } else {
+            return false;
+        }
+    }
+
+    changeUserStatus = (id, status) => {
+        let loginData = this.props.ContextState.loginData;
+        let params = {
+            appkey : loginData.appkey,
+            user_id : id,
+            user_status : status,
+        }
+
+        let conf = window.confirm("Are you sure?");
+        if(conf){
+            API.userChangeStatus(params)
+            .then((result) => {
+                if(result){
+                    this.setState({
+                        users : []
+                    }, () => {
+                        this.intervalLoad();
+                    })
+                } else {
+                    console.log(result);
+                    alert(result.message);
                 }
             })
         } else {
@@ -285,18 +317,21 @@ class Users extends Component {
             })
         }
     }
-
-    componentDidMount(){
-        this.mounted = true;
-        document.getElementById('panel-title').innerText = "Users List";
-        document.title = "User List";
-        
+    
+    intervalLoad = () => {
         this.getUser(this.state.users.length, this.state.limitRecord, () => {
             interval = setInterval(() => {
                 console.log("Load data")
                 this.getUser();
             }, 1000);
         })
+    }
+
+    componentDidMount(){
+        this.mounted = true;
+        document.getElementById('panel-title').innerText = "Users List";
+        document.title = "User List";
+        this.intervalLoad();
     }
 
     componentWillMount(){
@@ -328,7 +363,7 @@ class Users extends Component {
                                 </div>
 
                                 <div className="offer-body">
-                                    <UserDataTable previewUser={(user) => this.previewUser(user)} data={this.state.users} />
+                                    <UserDataTable previewUser={(user) => this.previewUser(user)} changeStatus = {(id, status) => this.changeUserStatus(id, status)} data={this.state.users} />
                                 </div>
 
                             </div>
@@ -360,22 +395,8 @@ class Users extends Component {
                                         </tr>
                                         <tr>
                                             <td>Point</td>
-                                            <td>{this.state.user.user_point}
-                                            {/* <button onClick={this.handlePlusPointButton} style={{float: "right"}} className="btn btn-primary btn-sm"><Icon size={12} icon={plus}></Icon></button> */}
-                                            </td>
+                                            <td>{this.state.user.user_point}</td>
                                         </tr>
-                                        {/* {
-                                            this.state.addPointMode ?
-                                            <tr>
-                                                <td colSpan={2}>
-                                                    <div style={{display:"flex"}}>
-                                                        <input onChange={(e) => this.handleChangeInput(e)} type="number" className="form-control" name="add_point" /><button onClick={this.handleSubmitPointBtn} className="ml-2 btn btn-primary btn-sm">submit</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            :
-                                            <></>
-                                        } */}
                                         <tr>
                                             <td>Created Date</td>
                                             <td>{this.state.user.user_created_date}</td>

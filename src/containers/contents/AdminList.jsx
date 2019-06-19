@@ -119,7 +119,9 @@ class AdminList extends Component {
                                                                     <td>
                                                                         <div className="action-wrapper" style={{textAlign : "center"}}>
                                                                             <button onClick={() => this.linkToEdit(value)} className="btn btn-default mr-2">Edit</button>
-                                                                            <button onClick={() => this.deleteUser(value.user_id)} className="btn btn-danger">Delete</button>
+                                                                            {
+                                                                                value.user_id !== loginData.user_id ? <button onClick={() => this.deleteUser(value.user_id)} className="btn btn-danger">Delete</button> : null
+                                                                            }
                                                                         </div>
                                                                     </td>
                                                                 )

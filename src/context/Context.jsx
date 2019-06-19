@@ -44,6 +44,7 @@ const ContextProvider = (ChildrenComponent) => {
                     case "ADMIN_LOGOUT":
                         loginData = {};
                         login = false;
+                        localStorage.clear();
                         break;
 
                     default:
