@@ -1,7 +1,7 @@
 let key;
 export const Setting = {
     isOnline : false,
-    onlinePath : 'http://kes.co.id/dev/paycrack/',
+    onlinePath : 'https://paycrack.jalanpelajar.com/',
     offlinePath : 'http://192.168.100.5/paycrack/',
     basePath : '/'
 }
